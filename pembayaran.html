@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pembayaran | Cakra Store</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #0b0e14; color: white; }
+        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 2rem; }
+    </style>
+</head>
+<body class="p-6 flex items-center justify-center min-h-screen">
+
+    <div class="glass p-8 w-full max-w-md shadow-2xl border-blue-500/20">
+        <h2 class="text-2xl font-black mb-6 text-center text-blue-500 uppercase">Instruksi Pembayaran</h2>
+        
+        <div class="space-y-4 mb-8">
+            <div class="flex justify-between border-b border-white/5 pb-2">
+                <span class="text-gray-400 text-sm">Game:</span>
+                <span id="res-game" class="font-bold">-</span>
+            </div>
+            <div class="flex justify-between border-b border-white/5 pb-2">
+                <span class="text-gray-400 text-sm">Item:</span>
+                <span id="res-item" class="font-bold text-blue-400">-</span>
+            </div>
+            <div class="flex justify-between border-b border-white/5 pb-2">
+                <span class="text-gray-400 text-sm">User ID:</span>
+                <span id="res-id" class="font-bold">-</span>
+            </div>
+            <div class="mt-4 p-4 bg-blue-600/10 rounded-2xl text-center">
+                <p class="text-xs text-gray-400 mb-1 uppercase tracking-widest">Total Bayar</p>
+                <h3 id="res-harga" class="text-3xl font-black text-white">Rp 0</h3>
+            </div>
+        </div>
+
+        <div class="space-y-4">
+            <h4 class="font-bold text-sm uppercase text-gray-400">Transfer Ke:</h4>
+            <div id="qr-container" class="bg-white p-6 rounded-2xl flex flex-col items-center">
+                <img id="qr-image" src="" alt="Metode Pembayaran" class="w-48 mb-3 object-contain">
+                <p id="qr-text" class="text-black font-black text-sm uppercase text-center"></p>
+                <p class="text-gray-500 text-[10px] text-center mt-1">Silahkan selesaikan pembayaran sesuai nominal</p>
+            </div>
+        </div>
+
+       <button id="btn-bayar-langsung" class="w-full mt-6 bg-blue-600 hover:bg-blue-500 py-4 rounded-2xl font-black transition shadow-lg shadow-blue-500/30 uppercase tracking-widest flex items-center justify-center">
+    <i class="fas fa-wallet mr-2 text-xl"></i> Bayar Sekarang
+</button>
+
+<button onclick="konfirmasiWA()" class="w-full mt-4 bg-green-600 hover:bg-green-500 py-4 rounded-2xl font-black transition shadow-lg shadow-green-500/20 uppercase tracking-widest flex items-center justify-center">
+    <i class="fab fa-whatsapp mr-2 text-xl"></i> Konfirmasi ke Admin
+</button>
+    </div>
+
+    <script>
+       const params = new URLSearchParams(window.location.search);
+const game = params.get('game');
+const item = params.get('item');
+const idUser = params.get('id');
+const harga = params.get('harga');
+const metode = params.get('metode');
+
+// Isi data teks ke tampilan
+document.getElementById('res-game').innerText = game || "-";
+document.getElementById('res-item').innerText = item || "-";
+document.getElementById('res-id').innerText = idUser || "-";
+document.getElementById('res-harga').innerText = "Rp " + (harga ? parseInt(harga).toLocaleString('id-ID') : "0");
+
+// Ambil elemen gambar, teks instruksi, dan tombol bayar
+const qrImg = document.getElementById('qr-image');
+const qrText = document.getElementById('qr-text');
+const btnBayar = document.getElementById('btn-bayar-langsung');
+
+// LOGIKA TAMPILAN & TOMBOL BERDASARKAN METODE
+if (metode === 'DANA') {
+    qrImg.src = "https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Logo_danain.png/640px-Logo_danain.png";
+    qrText.innerText = "TRANSFER DANA: 083188121461";
+    btnBayar.onclick = () => window.location.href = "https://link.dana.id/minta?full_url=https://qr.dana.id/v1/281012012022103060120023"; // Ganti dengan link QR DANA kamu
+} 
+else if (metode === 'GOPAY') {
+    qrImg.src = "https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/Gopay_logo.svg/1200px-Gopay_logo.svg.png";
+    qrText.innerText = "TRANSFER GOPAY: 083188121461";
+    btnBayar.onclick = () => window.location.href = "https://gopay.co.id/app/scanqr?deeplink_source=request_money";
+} 
+else if (metode === 'OVO') {
+    qrImg.src = "https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/Logo_ovo_purple.svg/1200px-Logo_ovo_purple.svg.png";
+    qrText.innerText = "TRANSFER OVO: 083188121461";
+    btnBayar.onclick = () => window.location.href = "ovo://"; // Mencoba membuka aplikasi OVO
+} 
+else {
+    // Default untuk QRIS
+    qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=CakraStore-${harga}`;
+    qrText.innerText = "QRIS ALL PAYMENT";
+    btnBayar.onclick = () => alert("Silahkan simpan gambar QRIS di atas dan scan di aplikasi pembayaran kamu.");
+}
+
+// Fungsi tombol WhatsApp
+function konfirmasiWA() {
+    const waNumber = "6283188121461"; 
+    const text = `Halo Admin Cakra Store, saya sudah bayar!\n\n` +
+                 `Metode: ${metode}\n` +
+                 `Game: ${game}\n` +
+                 `Item: ${item}\n` +
+                 `ID: ${idUser}\n` +
+                 `Total: Rp ${parseInt(harga).toLocaleString('id-ID')}\n\n` +
+                 `Mohon segera diproses ya!`;
+    window.location.href = `https://wa.me/${waNumber}?text=${encodeURIComponent(text)}`;
+}
+    </script>
+</body>
+</html>
