@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cek Status | Cakra Store</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background-color: #0b0e14; color: white; font-family: sans-serif; }
+        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
+    </style>
+</head>
+<body class="p-6 flex flex-col items-center justify-center min-h-screen">
+
+    <div class="glass p-8 w-full max-w-md shadow-2xl text-center">
+        <h2 class="text-2xl font-black text-blue-500 mb-6 uppercase">Cek Status Pesanan</h2>
+        
+        <input type="number" id="inputID" placeholder="Masukkan ID Game Kamu" 
+            class="bg-white/5 border border-white/10 rounded-2xl p-4 w-full outline-none focus:border-blue-500 mb-4 text-center">
+        
+        <button onclick="cekStatus()" class="w-full bg-blue-600 py-4 rounded-2xl font-bold mb-6">CEK SEKARANG</button>
+
+        <div id="hasil-status" class="hidden p-6 rounded-2xl border border-dashed border-white/20">
+            <p class="text-gray-400 text-sm mb-1">Status Pesanan ID <span id="display-id"></span>:</p>
+            <h3 id="status-teks" class="text-xl font-black uppercase"></h3>
+        </div>
+    </div>
+
+    <script>
+        function cekStatus() {
+            const id = document.getElementById('inputID').value;
+            const hasil = document.getElementById('hasil-status');
+            
+            if(!id) return alert("Masukkan ID dulu bos!");
+
+            hasil.classList.remove('hidden');
+            document.getElementById('display-id').innerText = id;
+            
+            // LOGIKA SEDERHANA:
+            // Karena kita belum pakai database otomatis, kita beri pesan default
+            document.getElementById('status-teks').innerText = "Sedang Diproses ⏳";
+            document.getElementById('status-teks').className = "text-xl font-black uppercase text-yellow-500";
+            
+            // Kamu bisa bilang ke user: "Jika sudah lebih dari 10 menit belum masuk, hubungi Admin"
+        }
+    </script>
+</body>
+</html>
