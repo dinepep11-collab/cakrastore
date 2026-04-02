@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Status Pesanan | Cakra Store</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #0b0e14; color: white; }
+        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 2.5rem; }
+        .loader { border: 3px solid rgba(255,255,255,0.1); border-top: 3px solid #3b82f6; border-radius: 50%; width: 24px; height: 24px; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body class="p-6 flex items-center justify-center min-h-screen">
+
+    <div class="glass p-8 w-full max-w-md shadow-2xl border-t-4 border-blue-500 relative">
+        <div class="text-center mb-8">
+            <div class="w-16 h-16 bg-blue-500/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-blue-500/20">
+                <i class="fas fa-spinner fa-spin text-2xl text-blue-500"></i>
+            </div>
+            <h2 class="text-xl font-black uppercase italic tracking-tighter">Proses Pesanan</h2>
+            <p class="text-[10px] text-gray-500 uppercase tracking-widest mt-1" id="res-trx">CKR-XXXXXX</p>
+        </div>
+
+        <div class="flex justify-center mb-8">
+            <span id="badge-status" class="bg-blue-500/10 text-blue-500 text-[10px] font-black px-4 py-1 rounded-full border border-blue-500/20 uppercase tracking-widest">
+                Sedang Diproses
+            </span>
+        </div>
+
+        <div class="space-y-6 px-2">
+            <div class="flex items-center gap-4">
+                <div id="step-1-status" class="w-8 h-8 rounded-xl bg-blue-500 flex items-center justify-center shadow-lg shadow-blue-500/20">
+                    <i class="fas fa-check text-xs text-white"></i>
+                </div>
+                <div>
+                    <p class="text-[11px] font-black uppercase">Pembayaran Diterima</p>
+                    <p class="text-[9px] text-gray-500 uppercase">Validasi otomatis berhasil</p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-4">
+                <div id="step-2-status" class="w-8 h-8 rounded-xl bg-white/5 flex items-center justify-center border border-white/10">
+                    <div id="step-2-loader" class="loader hidden"></div>
+                    <i id="step-2-icon" class="fas fa-server text-xs text-gray-500"></i>
+                    <i id="step-2-check" class="fas fa-check text-xs text-green-500 hidden"></i>
+                </div>
+                <div>
+                    <p class="text-[11px] font-black uppercase">Proses Server</p>
+                    <p class="text-[9px] text-gray-500 uppercase" id="step-2-text">Menunggu antrian server...</p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-4">
+                <div id="step-3-status" class="w-8 h-8 rounded-xl bg-white/5 flex items-center justify-center border border-white/10">
+                    <div id="step-3-loader" class="loader hidden"></div>
+                    <i id="step-3-icon" class="fas fa-paper-plane text-xs text-gray-500"></i>
+                    <i id="step-3-check" class="fas fa-check text-xs text-green-500 hidden"></i>
+                </div>
+                <div>
+                    <p class="text-[11px] font-black uppercase">Pengiriman Item</p>
+                    <p class="text-[9px] text-gray-500 uppercase" id="step-3-text">Item dikirim ke ID tujuan</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="h-[1px] bg-white/5 my-8"></div>
+
+        <a href="topup.html" class="block w-full bg-white/5 py-4 rounded-2xl text-[10px] font-black uppercase text-center hover:bg-white/10 transition-all tracking-widest text-gray-400">
+            <i class="fas fa-home mr-2"></i> Kembali ke Beranda
+        </a>
+    </div>
+
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const trx = params.get('trx') || "CKR-" + Math.floor(Math.random() * 900000);
+        document.getElementById('res-trx').innerText = trx;
+
+        // Simulasi Alur Proses Otomatis
+        window.onload = () => {
+            // Mulai Step 2 (Server)
+            setTimeout(() => {
+                document.getElementById('step-2-icon').classList.add('hidden');
+                document.getElementById('step-2-loader').classList.remove('hidden');
+                document.getElementById('step-2-text').innerText = "Sedang memproses SN...";
+                
+                setTimeout(() => {
+                    document.getElementById('step-2-loader').classList.add('hidden');
+                    document.getElementById('step-2-check').classList.remove('hidden');
+                    document.getElementById('step-2-status').className = "w-8 h-8 rounded-xl bg-green-500/20 flex items-center justify-center border border-green-500/30";
+                    document.getElementById('step-2-text').innerText = "SN/Antrian Berhasil";
+
+                    // Mulai Step 3 (Kirim)
+                    setTimeout(() => {
+                        document.getElementById('step-3-icon').classList.add('hidden');
+                        document.getElementById('step-3-loader').classList.remove('hidden');
+                        document.getElementById('step-3-text').innerText = "Mengirim diamond ke ID...";
+
+                        setTimeout(() => {
+                            document.getElementById('step-3-loader').classList.add('hidden');
+                            document.getElementById('step-3-check').classList.remove('hidden');
+                            document.getElementById('step-3-status').className = "w-8 h-8 rounded-xl bg-green-500/20 flex items-center justify-center border border-green-500/30";
+                            document.getElementById('step-3-text').innerText = "Item Berhasil Masuk!";
+                            
+                            const badge = document.getElementById('badge-status');
+                            badge.innerText = "BERHASIL";
+                            badge.className = "bg-green-500 text-white text-[10px] font-black px-4 py-1 rounded-full shadow-lg shadow-green-500/20 uppercase tracking-widest";
+                            
+                        }, 3000);
+                    }, 1000);
+                }, 2500);
+            }, 1500);
+        };
+    </script>
+</body>
+</html>

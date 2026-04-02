@@ -20,7 +20,20 @@ const dataGame = {
             { item: "512 Diamonds", harga: 145611 }
         ]
     },
-    "Free Fire": { img: "Free Fire.png", nominal: [{ item: "140 Diamonds", harga: 20000 }] },
+
+   "Free Fire": {
+        img: "Free Fire.png",
+        nominal: [
+            { item: "5 Diamonds", harga: 1000 },
+            { item: "12 Diamonds", harga: 2000 },
+            { item: "50 Diamonds", harga: 8000 },
+            { item: "70 Diamonds", harga: 10000 },
+            { item: "140 Diamonds", harga: 20000 },
+            { item: "355 Diamonds", harga: 50000 },
+            { item: "720 Diamonds", harga: 100000 },
+            { item: "1450 Diamonds", harga: 200000 }
+        ]
+    },
     "Genshin Impact": { img: "genshin.png", nominal: [{ item: "60 Genesis", harga: 15000 }] },
     "Valorant": { img: "valo.png", nominal: [{ item: "625 VP", harga: 75000 }] },
     "PUBG Mobile": { img: "pubg.png", nominal: [{ item: "60 UC", harga: 15000 }] },
@@ -72,8 +85,17 @@ function simpanTesti() {
     if (!nama || !pesan) return alert("Isi nama & pesan dulu Bosku!");
     if (!db) return alert("Firebase belum siap!");
 
+    // Ambil waktu sekarang agar lebih detail (Contoh: 2 Apr, 21:05)
+    const sekarang = new Date();
+    const opsiWaktu = { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' };
+    const waktuTerkirim = sekarang.toLocaleDateString('id-ID', opsiWaktu);
+
     db.ref('testimoni').push({
-        nama: nama, pesan: pesan, bintang: ratingPilihan, tanggal: new Date().toLocaleDateString('id-ID')
+        nama: nama, 
+        pesan: pesan, 
+        bintang: ratingPilihan, 
+        tanggal: waktuTerkirim, // Simpan waktu otomatis
+        balasan: "" // Siapkan tempat untuk balasan admin
     }).then(() => {
         alert("Testimoni terkirim!");
         document.getElementById('input-nama').value = "";
@@ -95,16 +117,33 @@ function renderTestiHTML() {
     const container = document.getElementById('testi-container');
     const loadMoreBtn = document.getElementById('load-more-testi');
     if(!container) return;
+    
     const ditarik = allTestimoni.slice(0, jumlahTampil);
     container.innerHTML = ditarik.map(t => `
-        <div class="glass p-6 rounded-2xl border border-white/5 shadow-xl">
-            <div class="flex mb-2 text-yellow-400 text-[10px]">
-                ${Array(t.bintang || 5).fill('<i class="fas fa-star"></i>').join('')}
+        <div class="glass p-6 rounded-3xl border border-white/5 shadow-xl relative overflow-hidden group">
+            <div class="flex justify-between items-start mb-3">
+                <div>
+                    <p class="font-black text-blue-500 text-[11px] uppercase tracking-wider">${t.nama}</p>
+                    <p class="text-[9px] text-gray-500 font-bold uppercase">${t.tanggal || 'Baru saja'}</p>
+                </div>
+                <div class="text-yellow-400 text-[9px] flex gap-0.5">
+                    ${Array(t.bintang || 5).fill('<i class="fas fa-star"></i>').join('')}
+                </div>
             </div>
-            <p class="text-sm italic text-gray-300">"${t.pesan}"</p>
-            <p class="mt-4 font-bold text-blue-500 text-[10px] uppercase">- ${t.nama}</p>
+            
+            <p class="text-xs italic text-gray-300 leading-relaxed mb-4">"${t.pesan}"</p>
+            
+            ${t.balasan ? `
+                <div class="bg-blue-600/10 p-3 rounded-2xl border-l-4 border-blue-600 mt-2">
+                    <p class="text-[9px] font-black text-blue-500 uppercase mb-1">
+                        <i class="fas fa-reply fa-rotate-180 mr-1 text-blue-400"></i> Balasan Admin:
+                    </p>
+                    <p class="text-[10px] text-gray-400 leading-tight">${t.balasan}</p>
+                </div>
+            ` : ''}
         </div>
     `).join('');
+    
     if (jumlahTampil >= allTestimoni.length) loadMoreBtn?.classList.add('hidden');
     else loadMoreBtn?.classList.remove('hidden');
 }
@@ -187,14 +226,23 @@ async function cekUsername() {
 }
 
 function bukaDetail(nama, gambar) {
-    if (nama !== "Mobile Legends") {
+    // Tambahkan "Free Fire" ke dalam daftar game yang diizinkan
+    if (nama !== "Mobile Legends" && nama !== "Free Fire") {
         document.getElementById('modal-maintenance').classList.remove('hidden');
         return; 
     }
     gameAktif = nama;
     document.getElementById('home-view').classList.add('hidden');
     document.getElementById('detail-view').classList.remove('hidden');
-    document.getElementById('container-server').classList.remove('hidden');
+    
+    // Tampilkan/Sembunyikan Server ID (Zone ID) secara otomatis
+    const serverBox = document.getElementById('container-server');
+    if (nama === "Free Fire") {
+        serverBox.classList.add('hidden'); // FF tidak butuh Server ID
+    } else {
+        serverBox.classList.remove('hidden'); // ML butuh Server ID
+    }
+    
     document.getElementById('detail-title').innerText = nama;
     document.getElementById('detail-img').src = gambar;
     renderNominal(nama);
@@ -218,6 +266,31 @@ function renderNominal(nama) {
     });
 }
 
+function pilihGame(nama) {
+    if (dataGame[nama]) {
+        gameAktif = nama;
+        document.getElementById('nama-game-pilihan').innerText = nama;
+        
+        // Munculkan bagian input & nominal
+        document.getElementById('input-section').classList.remove('hidden');
+        document.getElementById('nominal-section').classList.remove('hidden');
+        document.getElementById('payment-section').classList.remove('hidden');
+        
+        // Sembunyikan Zone ID kalau pilih Free Fire
+        const zoneInput = document.getElementById('zoneId');
+        if (nama === "Free Fire") {
+            if(zoneInput) zoneInput.classList.add('hidden');
+        } else {
+            if(zoneInput) zoneInput.classList.remove('hidden');
+        }
+
+        document.getElementById('input-section').scrollIntoView({ behavior: 'smooth' });
+        renderNominal(nama);
+    } else {
+        document.getElementById('modal-maintenance').classList.remove('hidden');
+    }
+}
+
 function pilihPayment(nama) {
     paymentAktif = nama;
     document.querySelectorAll('.payment-card').forEach(c => c.classList.remove('active-card'));
@@ -229,21 +302,26 @@ function tutupModal() { document.getElementById('modal-maintenance').classList.a
 async function prosesBayar() {
     const id = document.getElementById('userId').value;
     const zone = document.getElementById('zoneId')?.value || "";
-    if (!id || !gameAktif || !itemAktif || !paymentAktif) return alert("Lengkapi data!");
+    const username = document.getElementById('hasil-username').innerText;
+
+    if (!id || !gameAktif || !itemAktif || !paymentAktif) return alert("Lengkapi data bosku!");
     
     const fullID = zone ? `${id}(${zone})` : id;
-    
-    // SIMPAN KE RIWAYAT
+    const nomorTrx = "CKR" + Math.floor(Math.random() * 899999 + 100000);
+    const tgl = new Date().toLocaleString('id-ID');
+
+    // Simpan ke riwayat lokal dulu biar keren
     simpanKeRiwayat({
         game: gameAktif,
         item: itemAktif,
         id: fullID,
         harga: hargaAktif,
-        tanggal: new Date().toLocaleDateString('id-ID'),
-        status: "MENUNGGU"
+        tanggal: tgl,
+        status: "PENDING"
     });
 
-    window.location.href = `pembayaran.html?game=${gameAktif}&item=${itemAktif}&id=${fullID}&harga=${hargaAktif}&metode=${paymentAktif}`;
+    // Kirim data lengkap ke halaman pembayaran
+    window.location.href = `pembayaran.html?trx=${nomorTrx}&game=${gameAktif}&item=${itemAktif}&id=${fullID}&user=${username}&harga=${hargaAktif}&metode=${paymentAktif}&tgl=${tgl}`;
 }
 
 // === START ===

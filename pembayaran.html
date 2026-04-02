@@ -7,106 +7,201 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&display=swap');
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #0b0e14; color: white; }
-        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 2rem; }
+        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 2.5rem; }
+        .receipt-line { border-top: 2px dashed rgba(255, 255, 255, 0.1); margin: 1.5rem 0; position: relative; }
+        .receipt-line::before, .receipt-line::after { content: ''; position: absolute; width: 20px; height: 20px; background: #0b0e14; border-radius: 50%; top: -11px; }
+        .receipt-line::before { left: -40px; }
+        .receipt-line::after { right: -40px; }
+        .btn-copy:active { scale: 0.9; transition: 0.1s; }
     </style>
 </head>
 <body class="p-6 flex items-center justify-center min-h-screen">
 
-    <div class="glass p-8 w-full max-w-md shadow-2xl border-blue-500/20">
-        <h2 class="text-2xl font-black mb-6 text-center text-blue-500 uppercase">Instruksi Pembayaran</h2>
-        
-        <div class="space-y-4 mb-8">
-            <div class="flex justify-between border-b border-white/5 pb-2">
-                <span class="text-gray-400 text-sm">Game:</span>
-                <span id="res-game" class="font-bold">-</span>
+    <div class="glass p-8 w-full max-w-md shadow-2xl border-t-4 border-blue-500 relative overflow-hidden">
+        <div class="absolute -top-10 -right-10 w-32 h-32 bg-blue-500/10 blur-3xl rounded-full"></div>
+
+        <div class="text-center mb-6">
+            <div class="w-16 h-16 bg-blue-500/20 rounded-full flex items-center justify-center mx-auto mb-3 border border-blue-500/30">
+                <i class="fas fa-file-invoice text-2xl text-blue-500"></i>
             </div>
-            <div class="flex justify-between border-b border-white/5 pb-2">
-                <span class="text-gray-400 text-sm">Item:</span>
-                <span id="res-item" class="font-bold text-blue-400">-</span>
+            <h2 class="text-xl font-black uppercase italic tracking-tighter text-blue-500">Tagihan Pembayaran</h2>
+            <p class="text-[10px] text-gray-500 tracking-widest uppercase mt-1" id="res-trx">CKR-XXXXXX</p>
+        </div>
+
+        <div class="flex flex-col items-center mb-6">
+            <span class="bg-yellow-500/10 text-yellow-500 text-[10px] font-black px-4 py-1 rounded-full border border-yellow-500/20 mb-2">
+                <i class="fas fa-clock mr-1"></i> BAYAR SEBELUM <span id="timer">10:00</span>
+            </span>
+            <p class="text-[9px] text-gray-500 uppercase font-bold tracking-widest">Status: Menunggu Transfer</p>
+        </div>
+
+        <div class="space-y-4 px-2">
+            <div class="flex justify-between items-center">
+                <span class="text-[11px] text-gray-400 uppercase font-bold">Game / Produk</span>
+                <span class="text-[12px] font-black text-white" id="res-game">-</span>
             </div>
-            <div class="flex justify-between border-b border-white/5 pb-2">
-                <span class="text-gray-400 text-sm">User ID:</span>
-                <span id="res-id" class="font-bold">-</span>
+            <div class="flex justify-between items-center">
+                <span class="text-[11px] text-gray-400 uppercase font-bold">Item Diamond</span>
+                <span class="text-[12px] font-black text-blue-400" id="res-item">-</span>
             </div>
-            <div class="mt-4 p-4 bg-blue-600/10 rounded-2xl text-center">
-                <p class="text-xs text-gray-400 mb-1 uppercase tracking-widest">Total Bayar</p>
-                <h3 id="res-harga" class="text-3xl font-black text-white">Rp 0</h3>
+            <div class="flex justify-between items-center">
+                <span class="text-[11px] text-gray-400 uppercase font-bold">Tujuan / ID</span>
+                <span class="text-[12px] font-black text-white" id="res-id">-</span>
+            </div>
+            <div class="flex justify-between items-center border-t border-white/5 pt-3">
+                <span class="text-[11px] text-gray-400 uppercase font-bold">Metode Bayar</span>
+                <span class="text-[12px] font-black text-green-400" id="res-metode">-</span>
             </div>
         </div>
 
-        <div class="space-y-4">
-            <h4 class="font-bold text-sm uppercase text-gray-400">Transfer Ke:</h4>
-            <div id="qr-container" class="bg-white p-6 rounded-2xl flex flex-col items-center">
-                <img id="qr-image" src="" alt="Metode Pembayaran" class="w-48 mb-3 object-contain">
-                <p id="qr-text" class="text-black font-black text-sm uppercase text-center"></p>
-                <p class="text-gray-500 text-[10px] text-center mt-1">Silahkan selesaikan pembayaran sesuai nominal</p>
+        <div class="receipt-line"></div>
+
+        <div class="bg-white/5 p-5 rounded-3xl border border-white/10 text-center mb-8 relative">
+            <p class="text-[9px] text-gray-400 uppercase font-black mb-1 tracking-widest">Total Tagihan</p>
+            <h1 class="text-3xl font-black text-white flex items-center justify-center gap-2">
+                <span id="res-harga">Rp 0</span>
+                <button onclick="copyText('res-harga')" class="text-sm text-blue-500 hover:text-blue-400 btn-copy">
+                    <i class="fas fa-copy"></i>
+                </button>
+            </h1>
+        </div>
+
+        <div id="payment-instruction-container" class="text-center mb-8">
+            <div id="qr-container" class="hidden flex flex-col items-center">
+                <div class="bg-white p-3 rounded-3xl mb-4 shadow-xl shadow-blue-500/10">
+                    <img id="qr-img" src="" class="w-44 h-44">
+                </div>
+                <button onclick="downloadQR()" class="bg-white/5 px-6 py-2 rounded-full text-[10px] text-white font-bold uppercase tracking-widest hover:bg-white/10 transition-all border border-white/10">
+                    <i class="fas fa-download mr-2"></i> Simpan QRIS
+                </button>
+            </div>
+
+            <div id="manual-container" class="hidden">
+                <div class="bg-blue-600/5 p-5 rounded-3xl border border-blue-500/20 relative group">
+                    <p class="text-[10px] text-blue-400 uppercase font-black mb-1" id="label-metode">Nomor Tujuan</p>
+                    <div class="flex items-center justify-center gap-3">
+                        <p class="text-xl font-black text-white tracking-widest" id="norek-tujuan">083188121461</p>
+                        <button onclick="copyText('norek-tujuan')" class="w-8 h-8 bg-blue-500/20 rounded-lg flex items-center justify-center text-blue-500 btn-copy">
+                            <i class="fas fa-copy text-xs"></i>
+                        </button>
+                    </div>
+                </div>
+                <p class="text-[10px] text-gray-500 mt-3 italic">*Pastikan nominal transfer sesuai sampai digit terakhir</p>
             </div>
         </div>
 
-       <button id="btn-bayar-langsung" class="w-full mt-6 bg-blue-600 hover:bg-blue-500 py-4 rounded-2xl font-black transition shadow-lg shadow-blue-500/30 uppercase tracking-widest flex items-center justify-center">
-    <i class="fas fa-wallet mr-2 text-xl"></i> Bayar Sekarang
-</button>
-
-<button onclick="konfirmasiWA()" class="w-full mt-4 bg-green-600 hover:bg-green-500 py-4 rounded-2xl font-black transition shadow-lg shadow-green-500/20 uppercase tracking-widest flex items-center justify-center">
-    <i class="fab fa-whatsapp mr-2 text-xl"></i> Konfirmasi ke Admin
-</button>
+<div class="space-y-3">
+    <div class="grid grid-cols-2 gap-3">
+        <button onclick="window.print()" class="glass py-4 rounded-2xl text-[10px] font-black uppercase hover:bg-white/5 transition-all text-gray-400 flex items-center justify-center gap-2">
+            <i class="fas fa-print"></i> Cetak
+        </button>
+        <button id="btn-status" class="glass py-4 rounded-2xl text-[10px] font-black uppercase hover:bg-white/5 transition-all text-blue-500 flex items-center justify-center gap-2">
+            <i class="fas fa-search"></i> Status
+        </button>
     </div>
 
-    <script>
-       const params = new URLSearchParams(window.location.search);
-const game = params.get('game');
-const item = params.get('item');
-const idUser = params.get('id');
-const harga = params.get('harga');
-const metode = params.get('metode');
+    <a id="btn-wa" href="https://wa.me/6283188121461" class="block w-full bg-blue-600 py-4 rounded-2xl text-[10px] font-black uppercase text-center hover:bg-blue-500 shadow-lg shadow-blue-600/20 transition-all flex items-center justify-center gap-2">
+        <i class="fab fa-whatsapp text-sm"></i> Konfirmasi Pembayaran
+    </a>
+</div>
+    </div>
 
-// Isi data teks ke tampilan
-document.getElementById('res-game').innerText = game || "-";
-document.getElementById('res-item').innerText = item || "-";
-document.getElementById('res-id').innerText = idUser || "-";
-document.getElementById('res-harga').innerText = "Rp " + (harga ? parseInt(harga).toLocaleString('id-ID') : "0");
+<script>
+    // Ambil Data dari URL
+    const params = new URLSearchParams(window.location.search);
+    const game = params.get('game') || "-";
+    const item = params.get('item') || "-";
+    const idUser = params.get('id') || "-";
+    const harga = params.get('harga') || "0";
+    const metode = params.get('metode') || "-";
+    const trx = params.get('trx') || "CKR-" + Math.floor(Math.random() * 900000);
 
-// Ambil elemen gambar, teks instruksi, dan tombol bayar
-const qrImg = document.getElementById('qr-image');
-const qrText = document.getElementById('qr-text');
-const btnBayar = document.getElementById('btn-bayar-langsung');
+    // Fungsi Timer (Pindahkan ke luar agar rapi)
+    let time = 600;
+    function startTimer() {
+        const timerEl = document.getElementById('timer');
+        if(!timerEl) return;
+        
+        const countdown = setInterval(() => {
+            let mins = Math.floor(time / 60);
+            let secs = time % 60;
+            timerEl.innerText = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+            
+            if (time <= 0) {
+                clearInterval(countdown);
+                timerEl.innerText = "EXPIRED";
+            } else {
+                time--;
+            }
+        }, 1000);
+    }
 
-// LOGIKA TAMPILAN & TOMBOL BERDASARKAN METODE
-if (metode === 'DANA') {
-    qrImg.src = "Dana_logo.png";
-    qrText.innerText = "TRANSFER DANA: 083188121461";
-    btnBayar.onclick = () => window.location.href = "https://link.dana.id/minta?full_url=https://qr.dana.id/v1/281012012022103060120023"; // Ganti dengan link QR DANA kamu
-} 
-else if (metode === 'GOPAY') {
-    qrImg.src = "https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/Gopay_logo.svg/1200px-Gopay_logo.svg.png";
-    qrText.innerText = "TRANSFER GOPAY: 083188121461";
-    btnBayar.onclick = () => window.location.href = "https://gopay.co.id/app/scanqr?deeplink_source=request_money";
-} 
-else if (metode === 'OVO') {
-    qrImg.src = "https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/Logo_ovo_purple.svg/1200px-Logo_ovo_purple.svg.png";
-    qrText.innerText = "TRANSFER OVO: 083188121461";
-    btnBayar.onclick = () => window.location.href = "ovo://"; // Mencoba membuka aplikasi OVO
-} 
-else {
-    // Default untuk QRIS
-    qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=CakraStore-${harga}`;
-    qrText.innerText = "QRIS ALL PAYMENT";
-    btnBayar.onclick = () => alert("Silahkan simpan gambar QRIS di atas dan scan di aplikasi pembayaran kamu.");
-}
+    // Jalankan semua fungsi saat halaman siap
+    window.onload = () => {
+        // 1. Isi Data ke UI
+        document.getElementById('res-game').innerText = game;
+        document.getElementById('res-item').innerText = item;
+        document.getElementById('res-id').innerText = idUser;
+        document.getElementById('res-metode').innerText = metode;
+        document.getElementById('res-trx').innerText = trx;
+        document.getElementById('res-harga').innerText = "Rp " + parseInt(harga).toLocaleString('id-ID');
 
-// Fungsi tombol WhatsApp
-function konfirmasiWA() {
-    const waNumber = "6283188121461"; 
-    const text = `Halo Admin Cakra Store, saya sudah bayar!\n\n` +
-                 `Metode: ${metode}\n` +
-                 `Game: ${game}\n` +
-                 `Item: ${item}\n` +
-                 `ID: ${idUser}\n` +
-                 `Total: Rp ${parseInt(harga).toLocaleString('id-ID')}\n\n` +
-                 `Mohon segera diproses ya!`;
-    window.location.href = `https://wa.me/${waNumber}?text=${encodeURIComponent(text)}`;
-}
-    </script>
+        // 2. Logika Tampilan Pembayaran
+        if (metode === 'QRIS') {
+            document.getElementById('qr-container').classList.remove('hidden');
+            document.getElementById('qr-img').src = "qris.jpg"; 
+        } else {
+            document.getElementById('manual-container').classList.remove('hidden');
+            const labelMetode = document.getElementById('label-metode');
+            if(labelMetode) labelMetode.innerText = "NOMOR " + metode;
+        }
+
+        // 3. Link Tombol Status (Ke transaksi.html membawa data)
+        document.getElementById('btn-status').onclick = () => {
+            window.location.href = `transaksi.html?trx=${trx}&game=${game}&item=${item}&id=${idUser}`;
+        };
+
+        // 4. Jalankan Timer & Notif Telegram
+        startTimer();
+        kirimKeTelegram();
+    };
+
+    // Fungsi Salin Teks
+    function copyText(id) {
+        const el = document.getElementById(id);
+        if(!el) return;
+        const text = el.innerText.replace("Rp ", "").replace(/\./g, "");
+        navigator.clipboard.writeText(text);
+        alert("Berhasil disalin: " + text);
+    }
+
+    function downloadQR() {
+        const link = document.createElement('a');
+        link.href = document.getElementById('qr-img').src;
+        link.download = 'QRIS_CakraStore.jpg';
+        link.click();
+    }
+
+    function kirimKeTelegram() {
+        const token = "8088370002:AAHPKlUxrZPxndC2RVOr3vojc-ShGXjmUBU";
+        const chatId = "2060108674";
+        const nickname = params.get('user') || "Tanpa Nickname";
+        const pesan = `🚀 *PESANAN MASUK*\n` +
+                      `------------------\n` +
+                      `🧾 *TRX:* ${trx}\n` +
+                      `🎮 *GAME:* ${game}\n` +
+                      `💎 *ITEM:* ${item}\n` +
+                      `🆔 *ID:* ${idUser}\n` +
+                      `👤 *NICK:* ${nickname}\n` +
+                      `💰 *TOTAL:* Rp ${parseInt(harga).toLocaleString('id-ID')}\n` +
+                      `💳 *VIA:* ${metode}\n` +
+                      `------------------\n` +
+                      `⚡ *CEK MUTASI SEKARANG!*`;
+
+        fetch(`https://api.telegram.org/bot${token}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(pesan)}&parse_mode=Markdown`);
+    }
+</script>
 </body>
 </html>
