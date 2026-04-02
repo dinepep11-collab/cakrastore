@@ -1,6 +1,7 @@
 // === 1. DATABASE GAME LENGKAP ===
 const dataGame = {
     "Mobile Legends": {
+        populer: true,
         img: "ml.png",
         nominal: [
             { item: "Weekly Diamond Pass", harga: 28751, hargaAsli: 30499 },
@@ -22,6 +23,7 @@ const dataGame = {
     },
 
    "Free Fire": {
+        populer: true,
         img: "Free Fire.png",
         nominal: [
             { item: "5 Diamonds", harga: 1000 },
@@ -34,9 +36,39 @@ const dataGame = {
             { item: "1450 Diamonds", harga: 200000 }
         ]
     },
-    "Genshin Impact": { img: "genshin.png", nominal: [{ item: "60 Genesis", harga: 15000 }] },
+
+       "Roblox": {
+        populer: true,
+        img: "roblox.png",
+        nominal: [
+            { item: "5 Diamonds", harga: 1000 },
+            { item: "12 Diamonds", harga: 2000 },
+            { item: "50 Diamonds", harga: 8000 },
+            { item: "70 Diamonds", harga: 10000 },
+            { item: "140 Diamonds", harga: 20000 },
+            { item: "355 Diamonds", harga: 50000 },
+            { item: "720 Diamonds", harga: 100000 },
+            { item: "1450 Diamonds", harga: 200000 }
+        ]
+    },
+
+           "Super Sus": {
+        populer: false,
+        img: "supersus.png",
+        nominal: [
+            { item: "5 Diamonds", harga: 1000 },
+            { item: "12 Diamonds", harga: 2000 },
+            { item: "50 Diamonds", harga: 8000 },
+            { item: "70 Diamonds", harga: 10000 },
+            { item: "140 Diamonds", harga: 20000 },
+            { item: "355 Diamonds", harga: 50000 },
+            { item: "720 Diamonds", harga: 100000 },
+            { item: "1450 Diamonds", harga: 200000 }
+        ]
+    },
+    "Genshin Impact": { populer: true, img: "genshin.png", nominal: [{ item: "60 Genesis", harga: 15000 }] },
     "Valorant": { img: "valo.png", nominal: [{ item: "625 VP", harga: 75000 }] },
-    "PUBG Mobile": { img: "pubg.png", nominal: [{ item: "60 UC", harga: 15000 }] },
+    "PUBG Mobile": { populer: true, img: "pubg.png", nominal: [{ item: "60 UC", harga: 15000 }] },
     "Steam Wallet": { img: "steam.png", nominal: [{ item: "Rp 12.000", harga: 15000 }] }
 };
 
@@ -190,16 +222,49 @@ function hapusRiwayat() {
 }
 
 // === 5. FUNGSI GAME & MODAL ===
+
+// === 5. FUNGSI GAME & MODAL ===
+
 function renderGame() {
     const container = document.getElementById('game-list');
     if(!container) return;
+    
+    container.innerHTML = ""; // Bersihkan container
+
+    // Mengubah grid di Home agar lebih gaming (4 kolom di laptop)
+    container.className = "grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6";
+
     Object.keys(dataGame).forEach(nama => {
-        const div = document.createElement('div');
-        div.className = "glass p-4 rounded-3xl cursor-pointer text-center hover:scale-105 transition-all";
-        div.innerHTML = `<img src="${dataGame[nama].img}" class="w-full rounded-2xl mb-3 aspect-square object-cover"><p class="font-bold text-sm text-white">${nama}</p>`;
-        div.onclick = () => bukaDetail(nama, dataGame[nama].img);
-        container.appendChild(div);
+        // HANYA tampilkan game jika populer === true
+        if (dataGame[nama].populer === true) {
+            const gameData = dataGame[nama];
+
+            // Membuat Card dengan struktur gaming baru
+            const div = document.createElement('div');
+            div.className = "game-card group"; // Pakai class 'game-card' baru
+            div.innerHTML = `
+                <img src="${gameData.img}" class="w-full rounded-3xl mb-3 aspect-square object-cover">
+                <p class="game-title-card">${nama}</p>
+                
+                <div class="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-blue-500 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+            `;
+            
+            div.onclick = () => bukaDetail(nama, gameData.img);
+            container.appendChild(div);
+        }
     });
+
+    // Menambahkan Tombol "Lihat Semua" dengan desain gaming
+    const btnLainnya = document.createElement('div');
+    btnLainnya.className = "game-card flex flex-col justify-center items-center border-dashed border-2 border-white/10 opacity-70 group hover:opacity-100 hover:border-dashed hover:border-blue-500/50";
+    btnLainnya.innerHTML = `
+        <div class="w-full aspect-square rounded-3xl mb-3 bg-blue-500/5 flex items-center justify-center border-2 border-white/5 group-hover:border-blue-500/20">
+            <i class="fas fa-th-large text-4xl md:text-5xl text-blue-500/50 group-hover:text-blue-500 group-hover:scale-110 transition-all"></i>
+        </div>
+        <p class="game-title-card group-hover:text-white">Semua Game</p>
+    `;
+    btnLainnya.onclick = () => { window.location.href = "semua-game.html"; };
+    container.appendChild(btnLainnya);
 }
 
 async function cekUsername() {
@@ -226,44 +291,129 @@ async function cekUsername() {
 }
 
 function bukaDetail(nama, gambar) {
-    // Tambahkan "Free Fire" ke dalam daftar game yang diizinkan
+    // Kunci hanya untuk ML & FF sesuai request Bosku
     if (nama !== "Mobile Legends" && nama !== "Free Fire") {
-        document.getElementById('modal-maintenance').classList.remove('hidden');
-        return; 
+        // Jika diakses paksa lewat URL tapi bukan ML/FF, lempar ke Home
+        window.location.href = "topup.html"; 
+        return;
     }
+
     gameAktif = nama;
-    document.getElementById('home-view').classList.add('hidden');
-    document.getElementById('detail-view').classList.remove('hidden');
     
-    // Tampilkan/Sembunyikan Server ID (Zone ID) secara otomatis
+    // Pastikan home-view sembunyi & detail-view muncul
+    const homeView = document.getElementById('home-view');
+    const detailView = document.getElementById('detail-view');
+    
+    if(homeView) homeView.classList.add('hidden');
+    if(detailView) detailView.classList.remove('hidden');
+
+    // Atur Server ID (FF & Genshin sembunyiin server)
     const serverBox = document.getElementById('container-server');
     if (nama === "Free Fire") {
-        serverBox.classList.add('hidden'); // FF tidak butuh Server ID
+        if(serverBox) serverBox.classList.add('hidden');
     } else {
-        serverBox.classList.remove('hidden'); // ML butuh Server ID
+        if(serverBox) serverBox.classList.remove('hidden');
     }
-    
+
     document.getElementById('detail-title').innerText = nama;
     document.getElementById('detail-img').src = gambar;
+    
     renderNominal(nama);
-    window.scrollTo(0,0);
+    window.scrollTo(0, 0);
 }
 
-function renderNominal(nama) {
-    const container = document.getElementById('nominal-container');
-    container.innerHTML = "";
-    dataGame[nama].nominal.forEach(p => {
-        const div = document.createElement('div');
-        div.className = "glass p-4 rounded-xl text-center cursor-pointer hover:border-blue-500 transition border-2 border-transparent nominal-card";
-        div.innerHTML = `<p class="font-bold text-sm text-white">${p.item}</p><p class="text-blue-400 text-xs font-bold">Rp ${p.harga.toLocaleString('id-ID')}</p>`;
-        div.onclick = () => {
-            document.querySelectorAll('.nominal-card').forEach(c => c.classList.remove('active-card'));
-            div.classList.add('active-card');
-            itemAktif = p.item; hargaAktif = p.harga;
-            document.getElementById('display-total').innerText = "Rp " + p.harga.toLocaleString('id-ID');
-        };
-        container.appendChild(div);
+function renderNominal(game) {
+    const container = document.getElementById('nominal-list');
+    if (!container) return;
+    
+    container.innerHTML = ""; // Bersihkan list
+
+    // Ambil data dari dataGame
+    const gameData = dataGame[game];
+    if (!gameData || !gameData.nominal) {
+        console.log("Data tidak ditemukan untuk: " + game);
+        return;
+    }
+
+    const list = gameData.nominal;
+
+    // Logika pemisahan untuk Mobile Legends
+    if (game === "Mobile Legends") {
+        // --- Render WDP ---
+        const wdp = list.filter(v => v.item && v.item.toLowerCase().includes("weekly"));
+        if (wdp.length > 0) {
+            container.insertAdjacentHTML('beforeend', `<div class="col-span-full py-2 mb-2"><h3 class="text-blue-400 font-bold text-[11px] uppercase border-l-4 border-blue-600 pl-3">Weekly Diamond Pass</h3></div>`);
+            wdp.forEach(v => container.appendChild(buatElementNominal(v)));
+        }
+
+        // --- Render Diamond ---
+        const dm = list.filter(v => v.item && !v.item.toLowerCase().includes("weekly"));
+        if (dm.length > 0) {
+            container.insertAdjacentHTML('beforeend', `<div class="col-span-full py-2 mt-4 mb-2"><h3 class="text-blue-400 font-bold text-[11px] uppercase border-l-4 border-blue-600 pl-3">Diamond Biasa</h3></div>`);
+            dm.forEach(v => container.appendChild(buatElementNominal(v)));
+        }
+    } else {
+        // Game lain (seperti Free Fire) tampilkan semua
+        list.forEach(v => container.appendChild(buatElementNominal(v)));
+    }
+}
+
+function buatElementNominal(v) {
+    const div = document.createElement('div');
+    // Desain Box: Efek Glassmorphism dengan border glow saat dihover
+    div.className = "relative glass p-4 rounded-2xl cursor-pointer border-2 border-white/5 hover:border-blue-500/50 hover:bg-blue-500/5 transition-all duration-300 text-left flex flex-col justify-between min-h-[90px] overflow-hidden group";
+    
+    const hargaFormat = "Rp " + Number(v.harga).toLocaleString('id-ID');
+    const hargaCoret = v.hargaAsli ? `<p class="text-[9px] text-gray-500 line-through decoration-red-500/50">Rp ${Number(v.hargaAsli).toLocaleString('id-ID')}</p>` : "";
+
+    div.innerHTML = `
+        <div class="absolute -right-2 -top-2 opacity-10 group-hover:opacity-20 transition-opacity">
+            <i class="fas fa-gem text-4xl text-blue-400"></i>
+        </div>
+
+        <div class="relative z-10">
+            <p class="text-[11px] font-black text-white/90 mb-1 leading-tight group-hover:text-blue-400 transition-colors">${v.item}</p>
+            ${hargaCoret}
+        </div>
+        
+        <div class="relative z-10 mt-2">
+            <p class="text-[13px] text-blue-400 font-extrabold tracking-wide">${hargaFormat}</p>
+        </div>
+
+        <div class="check-indicator absolute top-2 right-2 hidden">
+            <i class="fas fa-check-circle text-blue-500 text-xs"></i>
+        </div>
+    `;
+    
+    div.onclick = () => {
+        pilihNominal(v.item, v.item, v.harga, div);
+        
+        // Munculkan indikator ceklis
+        document.querySelectorAll('.check-indicator').forEach(el => el.classList.add('hidden'));
+        div.querySelector('.check-indicator').classList.remove('hidden');
+    };
+    return div;
+}
+
+function pilihNominal(id, nama, harga, element) {
+    itemAktif = nama;
+    hargaAktif = harga;
+
+    const displayTotal = document.getElementById('display-total');
+    if (displayTotal) {
+        // Efek transisi angka
+        displayTotal.style.opacity = "0.5";
+        setTimeout(() => {
+            displayTotal.innerText = "Rp " + Number(harga).toLocaleString('id-ID');
+            displayTotal.style.opacity = "1";
+        }, 100);
+    }
+
+    // Reset dan aktifkan border
+    document.querySelectorAll('#nominal-list > div').forEach(el => {
+        el.classList.remove('border-blue-500', 'bg-blue-500/10', 'ring-2', 'ring-blue-500/20');
     });
+    element.classList.add('border-blue-500', 'bg-blue-500/10', 'ring-2', 'ring-blue-500/20');
 }
 
 function pilihGame(nama) {
@@ -304,13 +454,17 @@ async function prosesBayar() {
     const zone = document.getElementById('zoneId')?.value || "";
     const username = document.getElementById('hasil-username').innerText;
 
-    if (!id || !gameAktif || !itemAktif || !paymentAktif) return alert("Lengkapi data bosku!");
-    
+    // Cek kelengkapan data
+    if (!id) return showToast("Masukkan User ID dulu, Bosku!");
+    if (gameAktif !== "Free Fire" && !zone) return showToast("ID Server jangan kosong!");
+    if (!itemAktif) return showToast("Pilih Diamond-nya dulu!");
+    if (!paymentAktif) return showToast("Pilih metode pembayaran!");
+
+    // Jika semua oke, lanjut ke proses transaksi
     const fullID = zone ? `${id}(${zone})` : id;
     const nomorTrx = "CKR" + Math.floor(Math.random() * 899999 + 100000);
     const tgl = new Date().toLocaleString('id-ID');
 
-    // Simpan ke riwayat lokal dulu biar keren
     simpanKeRiwayat({
         game: gameAktif,
         item: itemAktif,
@@ -320,17 +474,107 @@ async function prosesBayar() {
         status: "PENDING"
     });
 
-    // Kirim data lengkap ke halaman pembayaran
     window.location.href = `pembayaran.html?trx=${nomorTrx}&game=${gameAktif}&item=${itemAktif}&id=${fullID}&user=${username}&harga=${hargaAktif}&metode=${paymentAktif}&tgl=${tgl}`;
+}
+
+// Fungsi bantu untuk memunculkan pesan (Toast)
+function showToast(pesan) {
+    // Hapus toast lama kalau ada
+    const oldToast = document.querySelector('.toast-notif');
+    if (oldToast) oldToast.remove();
+
+    // Buat elemen baru
+    const toast = document.createElement('div');
+    toast.className = 'toast-notif';
+    toast.innerHTML = `<i class="fas fa-exclamation-triangle"></i> ${pesan}`;
+    document.body.appendChild(toast);
+
+    // Jalankan animasi muncul
+    setTimeout(() => toast.classList.add('toast-show'), 100);
+
+    // Hilang otomatis setelah 3 detik
+    setTimeout(() => {
+        toast.classList.remove('toast-show');
+        setTimeout(() => toast.remove(), 500);
+    }, 3000);
 }
 
 // === START ===
 document.addEventListener('DOMContentLoaded', () => {
-    renderGame();
     initFirebase();
+    tampilkanRiwayat();
     muatTesti();
-    tampilkanRiwayat(); // Tampilkan saat buka web
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const gameParam = urlParams.get('game');
+
+    // CEK: Kalau ada parameter game (diklik dari katalog)
+    if (gameParam && dataGame[gameParam]) {
+        // Langsung sembunyikan home-view SEBELUM render yang lain
+        document.getElementById('home-view').classList.add('hidden');
+        
+        // Baru jalankan fungsi buka detail
+        bukaDetail(gameParam, dataGame[gameParam].img);
+    } else {
+        // Kalau nggak ada parameter (akses home biasa), baru render game list
+        if (document.getElementById('game-list')) {
+            renderGame(); 
+        }
+    }
+
     if(document.querySelector(".mySwiper")) {
         new Swiper(".mySwiper", { loop: true, autoplay: { delay: 3000 } });
+    }
+});
+
+    // --- FUNGSI PROFIL & GANTI FOTO ---
+
+    // Fungsi Ganti Foto Profil (Simpan ke Local Storage agar tidak hilang saat refresh)
+function gantiPFP(input) {
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        
+        reader.onload = function(e) {
+            const fotoData = e.target.result;
+            
+            // 1. Update semua foto profil di layar
+            document.querySelectorAll('#user-pfp').forEach(img => {
+                img.src = fotoData;
+            });
+
+            // 2. Simpan ke LocalStorage
+            localStorage.setItem('cakra_pfp_data', fotoData);
+
+            // 3. Tampilkan Custom Toast (Ganti Alert)
+            const toast = document.getElementById('custom-toast');
+            toast.classList.remove('hidden');
+            
+            // Hilangkan otomatis setelah 3 detik
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 3000);
+        }
+        
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+// 2. Fungsi yang otomatis jalan saat halaman dibuka (REFRESH)
+window.addEventListener('DOMContentLoaded', () => {
+    const savedPFP = localStorage.getItem('cakra_pfp_data');
+    if (savedPFP) {
+        document.querySelectorAll('#user-pfp').forEach(img => img.src = savedPFP);
+    }
+});
+
+// 3. Toggle Dropdown Menu
+document.addEventListener('click', (e) => {
+    const btn = document.getElementById('profile-btn');
+    const menu = document.getElementById('profile-menu');
+    
+    if (btn && btn.contains(e.target)) {
+        menu.classList.toggle('hidden'); // Pakai 'hidden' sesuai class awal di HTML
+    } else if (menu && !menu.contains(e.target)) {
+        menu.classList.add('hidden');
     }
 });

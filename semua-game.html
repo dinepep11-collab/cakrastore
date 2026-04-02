@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Katalog Game | Cakra Store</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #0b0e14; color: white; }
+        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
+    </style>
+</head>
+<body class="pb-20">
+
+    <nav class="fixed top-0 w-full z-50 glass py-4 px-6">
+        <div class="container mx-auto flex items-center gap-4">
+            <a href="topup.html" class="text-gray-400 hover:text-white transition">
+                <i class="fas fa-arrow-left text-lg"></i>
+            </a>
+            <h1 class="text-xl font-extrabold tracking-tighter text-blue-500 uppercase">Katalog Game</h1>
+        </div>
+    </nav>
+
+    <section class="mt-28 container mx-auto px-6">
+        <div class="glass p-2 rounded-2xl mb-10 flex items-center px-4">
+            <i class="fas fa-search text-gray-500 mr-3"></i>
+            <input type="text" id="searchGame" onkeyup="filterGame()" placeholder="Cari game kesukaanmu..." 
+                class="bg-transparent w-full py-3 outline-none text-sm font-semibold placeholder:text-gray-600">
+        </div>
+
+        <div id="full-game-list" class="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+            </div>
+    </section>
+
+    <div id="modal-maintenance" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+        <div class="glass max-w-sm w-full p-8 rounded-3xl text-center border-blue-500/30 shadow-2xl">
+            <div class="w-20 h-20 bg-blue-600/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                <i class="fas fa-tools text-3xl text-blue-500"></i>
+            </div>
+            <h3 class="text-2xl font-black uppercase mb-2">Segera Hadir!</h3>
+            <p class="text-gray-400 text-sm leading-relaxed mb-8">
+                Game ini sedang dalam tahap integrasi sistem. Tunggu kabar selanjutnya ya!
+            </p>
+            <button onclick="tutupModalKatalog()" 
+               class="w-full bg-blue-600 hover:bg-blue-500 py-4 rounded-2xl font-black uppercase tracking-widest transition-all">
+                Oke, Siap!
+            </button>
+        </div>
+    </div>
+
+<script src="script.js"></script>
+
+<script>
+    function muatKatalogLengkap() {
+        const container = document.getElementById('full-game-list');
+        if (!container || typeof dataGame === 'undefined') return;
+
+        container.innerHTML = ""; 
+
+        Object.keys(dataGame).forEach(nama => {
+            const game = dataGame[nama];
+            const div = document.createElement('div');
+            div.className = "game-item glass p-4 rounded-3xl cursor-pointer text-center hover:scale-105 transition-all";
+            
+            div.innerHTML = `
+                <img src="${game.img}" class="w-full rounded-2xl mb-3 aspect-square object-cover">
+                <p class="font-bold text-[10px] md:text-sm text-white truncate">${nama}</p>
+            `;
+
+            div.onclick = () => {
+       if (nama === "Mobile Legends" || nama === "Free Fire") {
+        // Jika ML atau FF, baru boleh pindah ke halaman topup (Home)
+        window.location.href = `topup.html?game=${encodeURIComponent(nama)}`;
+       } else {
+        // Jika game lain, munculkan pesan dan TETAP di halaman Katalog
+        const modal = document.getElementById('modal-maintenance');
+        const msg = document.getElementById('modal-msg');
+        if(msg) msg.innerText = "Maaf Bosku, layanan untuk " + nama + " belum tersedia. Pantau terus ya!";
+        if(modal) modal.classList.remove('hidden');
+    }
+};
+
+            container.appendChild(div);
+        });
+    }
+
+    function filterGame() {
+        const input = document.getElementById('searchGame').value.toLowerCase();
+        const items = document.getElementsByClassName('game-item');
+        for (let i = 0; i < items.length; i++) {
+            const title = items[i].getElementsByTagName('p')[0].innerText.toLowerCase();
+            items[i].style.display = title.includes(input) ? "" : "none";
+        }
+    }
+
+    function tutupModalKatalog() {
+        document.getElementById('modal-maintenance').classList.add('hidden');
+    }
+
+    window.onload = () => {
+        muatKatalogLengkap();
+    };
+</script>
+</body>
+</html>
