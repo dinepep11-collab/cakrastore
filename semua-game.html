@@ -69,16 +69,23 @@
                 <p class="font-bold text-[10px] md:text-sm text-white truncate">${nama}</p>
             `;
 
-            div.onclick = () => {
-       if (nama === "Mobile Legends" || nama === "Free Fire") {
-        // Jika ML atau FF, baru boleh pindah ke halaman topup (Home)
+div.onclick = () => {
+    // 1. Cek apakah game yang diklik adalah ML atau FF
+    if (nama === "Mobile Legends" || nama === "Free Fire") {
+        // Jika iya, baru pindah ke halaman topup
         window.location.href = `topup.html?game=${encodeURIComponent(nama)}`;
-       } else {
-        // Jika game lain, munculkan pesan dan TETAP di halaman Katalog
+    } else {
+        // 2. Jika SELAIN ML dan FF, tampilkan modal peringatan
         const modal = document.getElementById('modal-maintenance');
         const msg = document.getElementById('modal-msg');
-        if(msg) msg.innerText = "Maaf Bosku, layanan untuk " + nama + " belum tersedia. Pantau terus ya!";
-        if(modal) modal.classList.remove('hidden');
+        
+        if (msg) {
+            msg.innerText = "Maaf Bosku, layanan untuk " + nama + " belum tersedia. Pantau terus ya!";
+        }
+        
+        if (modal) {
+            modal.classList.remove('hidden'); // Memunculkan modal
+        }
     }
 };
 

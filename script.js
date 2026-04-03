@@ -41,14 +41,6 @@ const dataGame = {
         populer: true,
         img: "roblox.png",
         nominal: [
-            { item: "5 Diamonds", harga: 1000 },
-            { item: "12 Diamonds", harga: 2000 },
-            { item: "50 Diamonds", harga: 8000 },
-            { item: "70 Diamonds", harga: 10000 },
-            { item: "140 Diamonds", harga: 20000 },
-            { item: "355 Diamonds", harga: 50000 },
-            { item: "720 Diamonds", harga: 100000 },
-            { item: "1450 Diamonds", harga: 200000 }
         ]
     },
 
@@ -56,19 +48,11 @@ const dataGame = {
         populer: false,
         img: "supersus.png",
         nominal: [
-            { item: "5 Diamonds", harga: 1000 },
-            { item: "12 Diamonds", harga: 2000 },
-            { item: "50 Diamonds", harga: 8000 },
-            { item: "70 Diamonds", harga: 10000 },
-            { item: "140 Diamonds", harga: 20000 },
-            { item: "355 Diamonds", harga: 50000 },
-            { item: "720 Diamonds", harga: 100000 },
-            { item: "1450 Diamonds", harga: 200000 }
         ]
     },
-    "Genshin Impact": { populer: true, img: "genshin.png", nominal: [{ item: "60 Genesis", harga: 15000 }] },
+    "Genshin Impact": { populer: true, img: "genshin.png", nominal: [] },
     "Valorant": { img: "valo.png", nominal: [{ item: "625 VP", harga: 75000 }] },
-    "PUBG Mobile": { populer: true, img: "pubg.png", nominal: [{ item: "60 UC", harga: 15000 }] },
+    "PUBG Mobile": { populer: true, img: "pubg.png", nominal: [] },
     "Steam Wallet": { img: "steam.png", nominal: [{ item: "Rp 12.000", harga: 15000 }] }
 };
 
@@ -219,52 +203,6 @@ function hapusRiwayat() {
         localStorage.removeItem('riwayat_cakra');
         tampilkanRiwayat();
     }
-}
-
-// === 5. FUNGSI GAME & MODAL ===
-
-// === 5. FUNGSI GAME & MODAL ===
-
-function renderGame() {
-    const container = document.getElementById('game-list');
-    if(!container) return;
-    
-    container.innerHTML = ""; // Bersihkan container
-
-    // Mengubah grid di Home agar lebih gaming (4 kolom di laptop)
-    container.className = "grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6";
-
-    Object.keys(dataGame).forEach(nama => {
-        // HANYA tampilkan game jika populer === true
-        if (dataGame[nama].populer === true) {
-            const gameData = dataGame[nama];
-
-            // Membuat Card dengan struktur gaming baru
-            const div = document.createElement('div');
-            div.className = "game-card group"; // Pakai class 'game-card' baru
-            div.innerHTML = `
-                <img src="${gameData.img}" class="w-full rounded-3xl mb-3 aspect-square object-cover">
-                <p class="game-title-card">${nama}</p>
-                
-                <div class="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-blue-500 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-            `;
-            
-            div.onclick = () => bukaDetail(nama, gameData.img);
-            container.appendChild(div);
-        }
-    });
-
-    // Menambahkan Tombol "Lihat Semua" dengan desain gaming
-    const btnLainnya = document.createElement('div');
-    btnLainnya.className = "game-card flex flex-col justify-center items-center border-dashed border-2 border-white/10 opacity-70 group hover:opacity-100 hover:border-dashed hover:border-blue-500/50";
-    btnLainnya.innerHTML = `
-        <div class="w-full aspect-square rounded-3xl mb-3 bg-blue-500/5 flex items-center justify-center border-2 border-white/5 group-hover:border-blue-500/20">
-            <i class="fas fa-th-large text-4xl md:text-5xl text-blue-500/50 group-hover:text-blue-500 group-hover:scale-110 transition-all"></i>
-        </div>
-        <p class="game-title-card group-hover:text-white">Semua Game</p>
-    `;
-    btnLainnya.onclick = () => { window.location.href = "semua-game.html"; };
-    container.appendChild(btnLainnya);
 }
 
 async function cekUsername() {
@@ -561,20 +499,129 @@ function gantiPFP(input) {
 
 // 2. Fungsi yang otomatis jalan saat halaman dibuka (REFRESH)
 window.addEventListener('DOMContentLoaded', () => {
-    const savedPFP = localStorage.getItem('cakra_pfp_data');
+const savedPFP = localStorage.getItem('cakra_pfp_data');
     if (savedPFP) {
         document.querySelectorAll('#user-pfp').forEach(img => img.src = savedPFP);
     }
-});
 
-// 3. Toggle Dropdown Menu
-document.addEventListener('click', (e) => {
-    const btn = document.getElementById('profile-btn');
-    const menu = document.getElementById('profile-menu');
+    // 3. Toggle Dropdown Menu
+    const profileBtn = document.getElementById('profile-btn');
+    const profileMenu = document.getElementById('profile-menu');
     
-    if (btn && btn.contains(e.target)) {
-        menu.classList.toggle('hidden'); // Pakai 'hidden' sesuai class awal di HTML
-    } else if (menu && !menu.contains(e.target)) {
-        menu.classList.add('hidden');
+    document.addEventListener('click', (e) => {
+        if (profileBtn && profileBtn.contains(e.target)) {
+            profileMenu.classList.toggle('hidden');
+        } else if (profileMenu && !profileMenu.contains(e.target)) {
+            profileMenu.classList.add('hidden');
+        }
+    });
+
+    // Jalankan render game saat startup
+    if (document.getElementById('game-list')) {
+        renderGameCakra(); 
+    }
+}); // Penutup DOMContentLoaded
+
+// 1. Fungsi Utama untuk Menampilkan Game di Home
+function renderGameCakra() {
+    const container = document.getElementById('game-list');
+    if (!container) return;
+    
+    container.innerHTML = ""; 
+    // Pakai grid yang rapi
+    container.className = "grid grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2 md:gap-4";
+
+    Object.keys(dataGame).forEach(nama => {
+        const game = dataGame[nama];
+        // Render semua game yang populer
+        if (game.populer === true) {
+            buatKartuGameCakra(container, nama, game);
+        }
+    });
+
+    // Tombol LAINNYA
+    const btnKatalog = document.createElement('div');
+    btnKatalog.className = "game-card btn-katalog-cakra flex flex-col justify-center items-center border-dashed border-2 border-white/20 opacity-80 cursor-pointer p-4";
+    btnKatalog.innerHTML = `
+        <div class="flex items-center justify-center bg-blue-500/10 mb-2">
+            <i class="fas fa-th-large text-2xl text-blue-500"></i>
+        </div>
+        <p class="text-[7px] md:text-[10px] font-bold text-center uppercase">Lainnya</p>
+    `;
+    btnKatalog.onclick = () => window.location.href = "semua-game.html";
+    container.appendChild(btnKatalog);
+}
+
+function buatKartuGameCakra(container, nama, game) {
+    const div = document.createElement('div');
+    div.className = "game-card rounded-2xl p-1 group relative flex flex-col items-center justify-start cursor-pointer"; 
+    
+    div.innerHTML = `
+        <div class="w-full aspect-square overflow-hidden mb-1" style="border-radius: 12px !important;"> 
+            <img src="${game.img}" 
+                 class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110" 
+                 style="border-radius: 12px !important;">
+        </div>
+        <p class="font-bold text-[7px] md:text-[10px] text-white text-center leading-tight break-all w-full uppercase px-0.5 mt-0.5">
+            ${nama}
+        </p>
+    `;
+
+    div.onclick = function() {
+        // CEK DI SINI: Kalau nominal kosong atau game-nya Genshin/Roblox/PUBG, munculin pesan
+        if (!game.nominal || game.nominal.length === 0) {
+            munculPesan(nama); 
+        } else {
+            window.location.href = `topup.html?game=${encodeURIComponent(nama)}`;
+        }
+    };
+    container.appendChild(div);
+}
+
+function munculPesan(namaGame) {
+    const modal = document.getElementById('modal-maintenance');
+    const msg = document.getElementById('modal-msg');
+    if (modal && msg) {
+        msg.innerText = "Maaf Bosku, layanan untuk " + namaGame + " belum tersedia. Sedang dikerjakan!";
+        modal.classList.remove('hidden');
+    }
+}
+
+function tutupModal() {
+    const modal = document.getElementById('modal-maintenance');
+    if (modal) modal.classList.add('hidden');
+}
+
+// Inisialisasi saat halaman dibuka
+// Inisialisasi Utama saat halaman dibuka
+document.addEventListener('DOMContentLoaded', () => {
+    initFirebase();
+    tampilkanRiwayat();
+    muatTesti();
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const gameParam = urlParams.get('game');
+
+    if (gameParam && dataGame[gameParam]) {
+        const homeView = document.getElementById('home-view');
+        if(homeView) homeView.classList.add('hidden');
+        bukaDetail(gameParam, dataGame[gameParam].img);
+    } else {
+        renderGameCakra(); 
+    }
+
+    // INISIALISASI SWIPER DI SINI BIAR AMAN
+    if(document.querySelector(".mySwiper")) {
+        new Swiper(".mySwiper", { 
+            loop: true, 
+            autoplay: { 
+                delay: 3000,
+                disableOnInteraction: false 
+            },
+            pagination: {
+                el: ".swiper-pagination",
+                clickable: true,
+            },
+        });
     }
 });
