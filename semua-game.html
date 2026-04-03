@@ -16,7 +16,7 @@
 
     <nav class="fixed top-0 w-full z-50 glass py-4 px-6">
         <div class="container mx-auto flex items-center gap-4">
-            <a href="topup.html" class="text-gray-400 hover:text-white transition">
+            <a href="index.html" class="text-gray-400 hover:text-white transition">
                 <i class="fas fa-arrow-left text-lg"></i>
             </a>
             <h1 class="text-xl font-extrabold tracking-tighter text-blue-500 uppercase">Katalog Game</h1>
@@ -73,7 +73,7 @@ div.onclick = () => {
     // 1. Cek apakah game yang diklik adalah ML atau FF
     if (nama === "Mobile Legends" || nama === "Free Fire") {
         // Jika iya, baru pindah ke halaman topup
-        window.location.href = `topup.html?game=${encodeURIComponent(nama)}`;
+        window.location.href = `index.html?game=${encodeURIComponent(nama)}`;
     } else {
         // 2. Jika SELAIN ML dan FF, tampilkan modal peringatan
         const modal = document.getElementById('modal-maintenance');

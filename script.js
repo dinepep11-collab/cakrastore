@@ -232,7 +232,7 @@ function bukaDetail(nama, gambar) {
     // Kunci hanya untuk ML & FF sesuai request Bosku
     if (nama !== "Mobile Legends" && nama !== "Free Fire") {
         // Jika diakses paksa lewat URL tapi bukan ML/FF, lempar ke Home
-        window.location.href = "topup.html"; 
+        window.location.href = "index.html"; 
         return;
     }
 
@@ -572,7 +572,7 @@ function buatKartuGameCakra(container, nama, game) {
         if (!game.nominal || game.nominal.length === 0) {
             munculPesan(nama); 
         } else {
-            window.location.href = `topup.html?game=${encodeURIComponent(nama)}`;
+            window.location.href = `index.html?game=${encodeURIComponent(nama)}`;
         }
     };
     container.appendChild(div);
