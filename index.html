@@ -742,6 +742,69 @@ footer a:hover {
     }
 }
 
+/* === HOME PREMIUM LAYOUT === */
+
+/* Stats bar divider */
+.glass .divide-x > *:not(:first-child) {
+    border-left: 1px solid var(--border-color);
+}
+
+/* Keunggulan cards hover */
+.glass.rounded-2xl:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 35px rgba(59,130,246,0.15);
+}
+
+/* Section title accent bar */
+.w-1.h-8.bg-blue-500 {
+    box-shadow: 0 0 12px rgba(59,130,246,0.6);
+}
+
+:root[data-theme="light"] .w-1.h-8.bg-blue-500 {
+    box-shadow: 0 0 8px rgba(59,130,246,0.3);
+}
+
+/* Riwayat section */
+#riwayat-section .glass {
+    transition: all 0.3s ease;
+}
+
+#riwayat-section .glass:hover {
+    transform: translateX(4px);
+    border-color: rgba(59,130,246,0.4) !important;
+}
+
+/* Testi form */
+#testi-section input,
+#testi-section textarea {
+    background: var(--glass-bg) !important;
+    border: 1.5px solid var(--border-color) !important;
+    color: var(--text-primary) !important;
+    transition: all 0.3s ease;
+}
+
+#testi-section input:focus,
+#testi-section textarea:focus {
+    border-color: #3b82f6 !important;
+    box-shadow: 0 0 0 3px rgba(59,130,246,0.1) !important;
+}
+
+/* Load more button */
+#load-more-testi {
+    color: var(--text-secondary);
+}
+
+#load-more-testi:hover {
+    color: #3b82f6;
+    border-color: rgba(59,130,246,0.4) !important;
+    box-shadow: 0 4px 15px rgba(59,130,246,0.15);
+}
+
+/* Stats bar */
+:root[data-theme="light"] .glass.rounded-2xl.px-6 {
+    background: rgba(255,255,255,0.7) !important;
+}
+
 /* === FIX DIAMOND NUMBER VISIBILITY === */
 /* Diamond item name & number */
 #nominal-list p {
@@ -995,7 +1058,7 @@ footer a:hover {
 </button>
 
             <div class="relative">
-                <button id="profile-btn" class="flex items-center rounded-full transition-all active:scale-95">
+                <button id="profile-btn" class="flex items-center rounded-full transition-all active:scale-95" style="position:relative; z-index:200; cursor:pointer;">
                    <img id="user-pfp" src="https://ui-avatars.com/api/?name=Cakra&background=3b82f6&color=fff" 
                      class="w-9 h-9 rounded-full object-cover">
                     <i class="fas fa-chevron-down text-[10px] ml-2 text-blue-400"></i>
@@ -1056,77 +1119,166 @@ footer a:hover {
         </div>
     </div>
 </nav>
-    </nav>
 
-    <section id="home-view" class="mt-28 container mx-auto px-6">
-        <div class="swiper mySwiper mb-16 shadow-2xl">
-            <div class="swiper-wrapper">
-                <div class="swiper-slide"><img src="banner.png" class="w-full object-cover h-[200px] md:h-[400px]"></div>
-                <div class="swiper-slide"><img src="banner1.png" class="w-full object-cover h-[200px] md:h-[400px]"></div>
-            </div>
-            <div class="swiper-pagination"></div>
-        </div>
+    <section id="home-view" class="mt-24">
 
-        <h3 class="text-2xl font-bold mb-8 border-l-4 border-blue-500 pl-4 uppercase">Pilih Game</h3>
-<div id="game-list" class="grid grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2 md:gap-4">
-    </div>
-
-        <section id="testi-section" class="py-20 px-4">
-    <div class="max-w-6xl mx-auto">
-        <div class="text-center mb-12">
-            <h2 class="text-3xl font-black uppercase tracking-taler">Testimoni Pelanggan</h2>
-            <p class="text-gray-400 mt-2">Apa kata mereka tentang Cakra Store?</p>
-        </div>
-
-        <div class="glass p-8 rounded-3xl mb-12 max-w-2xl mx-auto border-blue-500/20">
-            <h3 class="text-xl font-black mb-6 uppercase text-center">Kirim Testimoni</h3>
-            
-            <div class="flex justify-center gap-3 mb-6 text-3xl">
-                <button onclick="setStar(1)" class="star-btn text-yellow-400 transition-all hover:scale-125"><i class="fas fa-star"></i></button>
-                <button onclick="setStar(2)" class="star-btn text-yellow-400 transition-all hover:scale-125"><i class="fas fa-star"></i></button>
-                <button onclick="setStar(3)" class="star-btn text-yellow-400 transition-all hover:scale-125"><i class="fas fa-star"></i></button>
-                <button onclick="setStar(4)" class="star-btn text-yellow-400 transition-all hover:scale-125"><i class="fas fa-star"></i></button>
-                <button onclick="setStar(5)" class="star-btn text-yellow-400 transition-all hover:scale-125"><i class="fas fa-star"></i></button>
-            </div>
-
-            <div class="space-y-4">
-                <input type="text" id="input-nama" placeholder="Nama Kamu" class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl focus:outline-none focus:border-blue-500 transition-all">
-                <textarea id="input-pesan" placeholder="Berikan ulasan terbaikmu..." class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl h-32 focus:outline-none focus:border-blue-500 transition-all"></textarea>
-                <button onclick="simpanTesti()" class="w-full bg-blue-600 hover:bg-blue-500 py-4 rounded-2xl font-black uppercase tracking-widest shadow-lg shadow-blue-500/20 transition-all active:scale-95">
-                    Kirim Testimoni <i class="fas fa-paper-plane ml-2"></i>
-                </button>
+        <!-- ===== HERO BANNER ===== -->
+        <div class="container mx-auto px-4 md:px-8 mb-14">
+            <div class="swiper mySwiper shadow-2xl" style="border-radius: 1.5rem; overflow: hidden; border: 1.5px solid var(--border-color); box-shadow: 0 20px 60px rgba(59,130,246,0.15);">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide"><img src="banner.png" class="w-full object-cover h-[180px] md:h-[380px]" style="display:block;"></div>
+                    <div class="swiper-slide"><img src="banner1.png" class="w-full object-cover h-[180px] md:h-[380px]" style="display:block;"></div>
+                </div>
+                <div class="swiper-pagination"></div>
             </div>
         </div>
 
-        <div id="testi-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
+        <!-- ===== STATS BAR ===== -->
+        <div class="container mx-auto px-4 md:px-8 mb-14">
+            <div class="glass rounded-2xl px-6 py-4 grid grid-cols-3 divide-x" style="border-color: var(--border-color); divide-color: var(--border-color);">
+                <div class="text-center px-4">
+                    <p class="text-lg md:text-2xl font-black text-blue-500">10rb+</p>
+                    <p class="text-[10px] uppercase font-bold tracking-widest" style="color: var(--text-secondary);">Transaksi</p>
+                </div>
+                <div class="text-center px-4">
+                    <p class="text-lg md:text-2xl font-black text-blue-500">24 Jam</p>
+                    <p class="text-[10px] uppercase font-bold tracking-widest" style="color: var(--text-secondary);">Proses Otomatis</p>
+                </div>
+                <div class="text-center px-4">
+                    <p class="text-lg md:text-2xl font-black text-blue-500">100%</p>
+                    <p class="text-[10px] uppercase font-bold tracking-widest" style="color: var(--text-secondary);">Aman & Resmi</p>
+                </div>
             </div>
-
-        <div class="text-center mt-12">
-            <button id="load-more-testi" onclick="lihatLainnya()" class="glass px-10 py-4 rounded-full font-bold border-blue-500/30 hover:bg-blue-600/20 hover:border-blue-500 transition-all inline-flex items-center gap-3">
-                LIHAT LAINNYA <i class="fas fa-chevron-down"></i>
-            </button>
         </div>
-    </div>
-</section>
 
-        <section id="riwayat-section" class="mb-20 container mx-auto px-6 hidden">
-    <h3 class="text-2xl font-bold mb-8 border-l-4 border-blue-500 pl-4 uppercase">Riwayat Pesanan Kamu</h3>
-    <div id="riwayat-list" class="grid grid-cols-1 gap-4">
+        <!-- ===== PILIH GAME ===== -->
+        <div class="container mx-auto px-4 md:px-8 mb-16">
+            <div class="flex items-center justify-between mb-8">
+                <div class="flex items-center gap-3">
+                    <div class="w-1 h-8 bg-blue-500 rounded-full"></div>
+                    <h3 class="text-xl md:text-2xl font-black uppercase tracking-tight" style="color: var(--text-primary);">Pilih Game</h3>
+                </div>
+                <a href="semua-game.html" class="text-[11px] font-black text-blue-500 hover:text-blue-400 uppercase tracking-widest flex items-center gap-1 transition-all">
+                    Lihat Semua <i class="fas fa-arrow-right text-[9px]"></i>
+                </a>
+            </div>
+            <div id="game-list" class="grid grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3 md:gap-5"></div>
         </div>
-    <button onclick="hapusRiwayat()" class="mt-4 text-xs text-red-500 hover:text-red-400 underline">
-        Hapus Semua Riwayat
-    </button>
-</section>
 
-        <footer class="text-center py-10 border-t border-white/10">
+        <!-- ===== KEUNGGULAN ===== -->
+        <div class="container mx-auto px-4 md:px-8 mb-16">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="glass rounded-2xl p-6 flex items-center gap-4" style="border-color: var(--border-color);">
+                    <div class="w-12 h-12 rounded-xl bg-blue-500/15 flex items-center justify-center flex-shrink-0">
+                        <i class="fas fa-bolt text-xl text-blue-500"></i>
+                    </div>
+                    <div>
+                        <p class="font-black text-sm uppercase" style="color: var(--text-primary);">Proses Instan</p>
+                        <p class="text-[11px]" style="color: var(--text-secondary);">Diamond masuk dalam hitungan detik</p>
+                    </div>
+                </div>
+                <div class="glass rounded-2xl p-6 flex items-center gap-4" style="border-color: var(--border-color);">
+                    <div class="w-12 h-12 rounded-xl bg-green-500/15 flex items-center justify-center flex-shrink-0">
+                        <i class="fas fa-shield-alt text-xl text-green-500"></i>
+                    </div>
+                    <div>
+                        <p class="font-black text-sm uppercase" style="color: var(--text-primary);">100% Aman</p>
+                        <p class="text-[11px]" style="color: var(--text-secondary);">Transaksi terenkripsi & terpercaya</p>
+                    </div>
+                </div>
+                <div class="glass rounded-2xl p-6 flex items-center gap-4" style="border-color: var(--border-color);">
+                    <div class="w-12 h-12 rounded-xl bg-purple-500/15 flex items-center justify-center flex-shrink-0">
+                        <i class="fas fa-headset text-xl text-purple-400"></i>
+                    </div>
+                    <div>
+                        <p class="font-black text-sm uppercase" style="color: var(--text-primary);">CS 24 Jam</p>
+                        <p class="text-[11px]" style="color: var(--text-secondary);">Siap bantu kapanpun kamu butuh</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== TESTIMONI ===== -->
+        <section id="testi-section" class="mb-16">
+            <div class="container mx-auto px-4 md:px-8">
+
+                <div class="flex items-center gap-3 mb-10">
+                    <div class="w-1 h-8 bg-blue-500 rounded-full"></div>
+                    <div>
+                        <h2 class="text-xl md:text-2xl font-black uppercase tracking-tight" style="color: var(--text-primary);">Testimoni Pelanggan</h2>
+                        <p class="text-[11px] mt-0.5" style="color: var(--text-secondary);">Apa kata mereka tentang Cakra Store?</p>
+                    </div>
+                </div>
+
+                <!-- Form Kirim Testimoni -->
+                <div class="glass rounded-3xl p-6 md:p-8 mb-10 max-w-2xl mx-auto" style="border-color: var(--border-color);">
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="w-8 h-8 rounded-xl bg-blue-500/20 flex items-center justify-center">
+                            <i class="fas fa-pen text-blue-500 text-xs"></i>
+                        </div>
+                        <h3 class="text-sm font-black uppercase tracking-widest" style="color: var(--text-primary);">Tulis Ulasanmu</h3>
+                    </div>
+
+                    <div class="flex justify-center gap-3 mb-6 text-2xl">
+                        <button onclick="setStar(1)" class="star-btn text-yellow-400 transition-all hover:scale-125"><i class="fas fa-star"></i></button>
+                        <button onclick="setStar(2)" class="star-btn text-yellow-400 transition-all hover:scale-125"><i class="fas fa-star"></i></button>
+                        <button onclick="setStar(3)" class="star-btn text-yellow-400 transition-all hover:scale-125"><i class="fas fa-star"></i></button>
+                        <button onclick="setStar(4)" class="star-btn text-yellow-400 transition-all hover:scale-125"><i class="fas fa-star"></i></button>
+                        <button onclick="setStar(5)" class="star-btn text-yellow-400 transition-all hover:scale-125"><i class="fas fa-star"></i></button>
+                    </div>
+
+                    <div class="space-y-3">
+                        <input type="text" id="input-nama" placeholder="Nama kamu..." class="w-full p-4 rounded-2xl outline-none transition-all text-sm font-semibold">
+                        <textarea id="input-pesan" placeholder="Bagikan pengalaman belanja kamu..." class="w-full p-4 rounded-2xl h-28 outline-none transition-all text-sm resize-none"></textarea>
+                        <button onclick="simpanTesti()" class="w-full bg-blue-600 hover:bg-blue-500 py-4 rounded-2xl font-black uppercase tracking-widest shadow-lg shadow-blue-500/20 transition-all active:scale-95 text-white text-sm">
+                            Kirim Ulasan <i class="fas fa-paper-plane ml-2"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Grid Testimoni -->
+                <div id="testi-container" class="grid grid-cols-1 md:grid-cols-2 gap-5"></div>
+
+                <div class="text-center mt-8">
+                    <button id="load-more-testi" onclick="lihatLainnya()" class="glass px-8 py-3 rounded-full text-sm font-black uppercase tracking-widest hover:border-blue-500/50 transition-all inline-flex items-center gap-2" style="border-color: var(--border-color); color: var(--text-secondary);">
+                        Lihat Lainnya <i class="fas fa-chevron-down text-xs"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== RIWAYAT PESANAN ===== -->
+        <section id="riwayat-section" class="mb-16 hidden">
+            <div class="container mx-auto px-4 md:px-8">
+                <div class="flex items-center justify-between mb-8">
+                    <div class="flex items-center gap-3">
+                        <div class="w-1 h-8 bg-blue-500 rounded-full"></div>
+                        <h3 class="text-xl font-black uppercase tracking-tight" style="color: var(--text-primary);">Riwayat Pesanan</h3>
+                    </div>
+                    <button onclick="hapusRiwayat()" class="text-[11px] font-bold text-red-400 hover:text-red-300 uppercase tracking-widest flex items-center gap-1 transition-all">
+                        <i class="fas fa-trash text-[9px]"></i> Hapus
+                    </button>
+                </div>
+                <div id="riwayat-list" class="grid grid-cols-1 gap-3"></div>
+            </div>
+        </section>
+
+        <footer class="text-center py-10 border-t" style="border-color: var(--border-color);">
             <div class="flex justify-center space-x-6 mb-6 text-2xl">
                 <a href="#" class="hover:text-pink-500 transition"><i class="fab fa-instagram"></i></a>
                 <a href="#" class="hover:text-blue-400 transition"><i class="fab fa-twitter"></i></a>
                 <a href="#" class="hover:text-blue-600 transition"><i class="fab fa-facebook"></i></a>
                 <a href="https://wa.me/6283188121461" class="hover:text-green-500 transition"><i class="fab fa-whatsapp"></i></a>
-                <a href="admin-login.html" class="text-blue-400 hover:text-blue-300 text-xs">Admin Panel</a>
             </div>
-            <p class="text-gray-500 text-sm">&copy; 2026 Cakra Store. All Rights Reserved.</p>
+            <p class="text-gray-500 text-sm mb-6">&copy; 2026 Cakra Store. All Rights Reserved.</p>
+
+            <!-- Tombol Admin Panel Terpisah -->
+            <div class="flex justify-center">
+                <a href="admin-login.html" class="group flex items-center gap-2 px-4 py-2 rounded-xl border border-dashed border-white/10 hover:border-blue-500/40 transition-all duration-300 opacity-40 hover:opacity-80">
+                    <i class="fas fa-lock text-[10px] text-gray-500 group-hover:text-blue-400 transition"></i>
+                    <span class="text-[10px] font-black uppercase tracking-widest text-gray-500 group-hover:text-blue-400 transition">Admin Only</span>
+                </a>
+            </div>
         </footer>
     </section>
 
@@ -1234,15 +1386,23 @@ footer a:hover {
 
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
+<style>
+:root[data-theme="light"] #modal-maintenance { background: rgba(15, 23, 42, 0.45) !important; }
+:root[data-theme="light"] #modal-maintenance .glass {
+    background: rgba(255, 255, 255, 0.97) !important;
+    border: 2px solid rgba(59, 130, 246, 0.35) !important;
+    box-shadow: 0 20px 60px rgba(59, 130, 246, 0.2) !important;
+}
+</style>
 <div id="modal-maintenance" class="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm hidden px-4">
-    <div class="glass max-w-sm w-full p-8 border-blue-500/30 text-center animate-in zoom-in duration-300">
-        <div class="w-20 h-20 bg-blue-500/20 rounded-full flex items-center justify-center mx-auto mb-6 border border-blue-500/30 shadow-[0_0_30px_rgba(59,130,246,0.3)]">
+    <div class="glass max-w-sm w-full p-8 text-center animate-in zoom-in duration-300" style="border: 2px solid rgba(59,130,246,0.3); border-radius: 1.5rem;">
+        <div class="w-20 h-20 bg-blue-500/20 rounded-full flex items-center justify-center mx-auto mb-6 border border-blue-500/30 shadow-[0_0_30px_rgba(59,130,246,0.2)]">
             <i class="fas fa-tools text-3xl text-blue-500"></i>
         </div>
-        <h3 class="text-xl font-black text-white mb-2 uppercase tracking-tight">Maintenance</h3>
-        <p id="modal-msg" class="text-gray-400 text-sm leading-relaxed mb-8">Maaf Bosku, layanan ini sedang dalam pengerjaan.</p>
+        <h3 class="text-xl font-black mb-2 uppercase tracking-tight" style="color: var(--text-primary);">Maintenance</h3>
+        <p id="modal-msg" class="text-sm leading-relaxed mb-8" style="color: var(--text-secondary);">Maaf Bosku, layanan ini sedang dalam pengerjaan.</p>
         
-        <button onclick="tutupModal()" class="w-full bg-blue-600 hover:bg-blue-500 py-4 rounded-2xl font-black uppercase tracking-widest transition-all active:scale-95 shadow-lg shadow-blue-500/20">
+        <button onclick="tutupModal()" class="w-full bg-blue-600 hover:bg-blue-500 py-4 rounded-2xl font-black uppercase tracking-widest transition-all active:scale-95 shadow-lg shadow-blue-500/30 text-white">
             Oke, Siap!
         </button>
     </div>

@@ -274,18 +274,18 @@ function renderTestiHTML() {
     
     const ditarik = allTestimoni.slice(0, jumlahTampil);
     container.innerHTML = ditarik.map(t => `
-        <div class="glass p-6 rounded-3xl border border-white/5 shadow-xl relative overflow-hidden group">
+        <div class="glass p-6 rounded-3xl border border-white/5 shadow-xl relative overflow-hidden group" style="border-color: var(--border-color);">
             <div class="flex justify-between items-start mb-3">
                 <div>
                     <p class="font-black text-blue-500 text-[11px] uppercase tracking-wider">${t.nama}</p>
-                    <p class="text-[9px] text-gray-500 font-bold uppercase">${t.tanggal || 'Baru saja'}</p>
+                    <p class="text-[9px] font-bold uppercase" style="color: var(--text-secondary);">${t.tanggal || 'Baru saja'}</p>
                 </div>
                 <div class="text-yellow-400 text-[9px] flex gap-0.5">
                     ${Array(t.bintang || 5).fill('<i class="fas fa-star"></i>').join('')}
                 </div>
             </div>
             
-            <p class="text-xs italic text-gray-300 leading-relaxed mb-4">"${t.pesan}"</p>
+            <p class="text-xs italic leading-relaxed mb-4" style="color: var(--text-secondary);">"${t.pesan}"</p>
             
             ${t.balasan ? `
                 <div class="bg-blue-600/10 p-3 rounded-2xl border-l-4 border-blue-600 mt-2">
@@ -320,13 +320,13 @@ function tampilkanRiwayat() {
     if (riwayat.length > 0) {
         section.classList.remove('hidden');
         container.innerHTML = riwayat.map(r => `
-            <div class="glass p-4 rounded-2xl border border-white/5 flex justify-between items-center mb-2">
+            <div class="glass p-4 rounded-2xl flex justify-between items-center mb-2" style="border: 1.5px solid var(--border-color);">
                 <div>
-                    <p class="font-bold text-sm text-white">${r.game} - ${r.item}</p>
-                    <p class="text-[10px] text-gray-400">${r.tanggal} | ID: ${r.id}</p>
+                    <p class="font-bold text-sm" style="color: var(--text-primary);">${r.game} - ${r.item}</p>
+                    <p class="text-[10px]" style="color: var(--text-secondary);">${r.tanggal} | ID: ${r.id}</p>
                 </div>
                 <div class="text-right">
-                    <p class="text-blue-400 font-bold text-xs">Rp ${r.harga.toLocaleString('id-ID')}</p>
+                    <p class="text-blue-500 font-bold text-xs">Rp ${r.harga.toLocaleString('id-ID')}</p>
                     <p class="text-[9px] text-green-500 uppercase font-black">${r.status}</p>
                 </div>
             </div>
@@ -610,28 +610,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// Profile & Foto Init (Pisah dari DOMContentLoaded utama)
-window.addEventListener('DOMContentLoaded', () => {
-    // Buat saved PFP
-    const savedPFP = localStorage.getItem('cakra_pfp_data');
-    if (savedPFP) {
-        document.querySelectorAll('#user-pfp').forEach(img => img.src = savedPFP);
-    }
 
-    // Toggle Dropdown Menu
-    const profileBtn = document.getElementById('profile-btn');
-    const profileMenu = document.getElementById('profile-menu');
-    
-    if(profileBtn && profileMenu) {
-        document.addEventListener('click', (e) => {
-            if (profileBtn.contains(e.target)) {
-                profileMenu.classList.toggle('hidden');
-            } else if (!profileMenu.contains(e.target)) {
-                profileMenu.classList.add('hidden');
-            }
-        });
-    }
-});
 
     // --- FUNGSI PROFIL & GANTI FOTO ---
 
@@ -665,28 +644,34 @@ function gantiPFP(input) {
     }
 }
 
-// 2. Fungsi yang otomatis jalan saat halaman dibuka (REFRESH)
+// Inisialisasi Profil & Dropdown (satu kali saja)
 window.addEventListener('DOMContentLoaded', () => {
-const savedPFP = localStorage.getItem('cakra_pfp_data');
+    // Load saved profile picture
+    const savedPFP = localStorage.getItem('cakra_pfp_data');
     if (savedPFP) {
         document.querySelectorAll('#user-pfp').forEach(img => img.src = savedPFP);
     }
 
-    // 3. Toggle Dropdown Menu
+    // Toggle Dropdown Menu (satu listener saja)
     const profileBtn = document.getElementById('profile-btn');
     const profileMenu = document.getElementById('profile-menu');
-    
-    document.addEventListener('click', (e) => {
-        if (profileBtn && profileBtn.contains(e.target)) {
+
+    if (profileBtn && profileMenu) {
+        profileBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
             profileMenu.classList.toggle('hidden');
-        } else if (profileMenu && !profileMenu.contains(e.target)) {
-            profileMenu.classList.add('hidden');
-        }
-    });
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!profileMenu.contains(e.target) && !profileBtn.contains(e.target)) {
+                profileMenu.classList.add('hidden');
+            }
+        });
+    }
 
     // Jalankan render game saat startup
     if (document.getElementById('game-list')) {
-        renderGameCakra(); 
+        renderGameCakra();
     }
 }); // Penutup DOMContentLoaded
 
