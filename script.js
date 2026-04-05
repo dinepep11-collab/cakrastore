@@ -456,7 +456,7 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
         // Kalau nggak ada parameter (akses home biasa), baru render game list
         if (document.getElementById('game-list')) {
-            renderGame(); 
+            renderGameCakra(); 
         }
     }
 
