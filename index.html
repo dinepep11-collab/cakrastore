@@ -177,6 +177,802 @@ nav .container {
     h1 { font-size: 14px !important; }
 }
 }
+
+/* === TEMA LIGHT/DARK MODE COMPREHENSIVE === */
+:root {
+    --bg-primary: #030409;
+    --bg-secondary: #1a1f29;
+    --bg-tertiary: #0b0e14;
+    --text-primary: #ffffff;
+    --text-secondary: #a0aec0;
+    --text-tertiary: #64748b;
+    --border-color: rgba(255, 255, 255, 0.1);
+    --border-color-light: rgba(255, 255, 255, 0.05);
+    --glass-bg: rgba(255, 255, 255, 0.015);
+    --hover-bg: rgba(255, 255, 255, 0.05);
+}
+
+:root[data-theme="light"] {
+    --bg-primary: #f0f4f9;
+    --bg-secondary: #e8eef7;
+    --bg-tertiary: #dce5f0;
+    --text-primary: #0f172a;
+    --text-secondary: #334155;
+    --text-tertiary: #64748b;
+    --border-color: rgba(59, 130, 246, 0.3);
+    --border-color-light: rgba(59, 130, 246, 0.15);
+    --glass-bg: rgba(59, 130, 246, 0.08);
+    --hover-bg: rgba(59, 130, 246, 0.12);
+}
+
+/* 1. BODY & BASE */
+body { 
+    font-family: 'Plus Jakarta Sans', sans-serif; 
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    scroll-behavior: smooth; 
+    overflow-x: hidden;
+    transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+:root[data-theme="dark"] body {
+    background-image: 
+        radial-gradient(at 10% 10%, rgba(59, 130, 246, 0.05) 0px, transparent 50%),
+        radial-gradient(at 90% 90%, rgba(147, 51, 234, 0.05) 0px, transparent 50%);
+}
+
+:root[data-theme="light"] body {
+    background-image: 
+        radial-gradient(at 10% 10%, rgba(59, 130, 246, 0.1) 0px, transparent 50%),
+        radial-gradient(at 90% 90%, rgba(147, 51, 234, 0.08) 0px, transparent 50%);
+}
+
+/* 2. GLASSMORPHISM */
+.glass { 
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px) saturate(180%); 
+    border: 1.5px solid var(--border-color);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+    transition: all 0.3s ease;
+}
+
+:root[data-theme="light"] .glass {
+    box-shadow: 0 8px 32px rgba(59, 130, 246, 0.15);
+}
+
+/* 3. NAVBAR */
+nav.glass {
+    border-bottom: 1px solid rgba(59, 130, 246, 0.15);
+    box-shadow: 0 5px 30px rgba(0, 0, 0, 0.6), 0 0 100px rgba(59, 130, 246, 0.1) inset;
+}
+
+:root[data-theme="light"] nav.glass {
+    background: rgba(248, 250, 252, 0.8);
+    border-bottom: 2px solid rgba(59, 130, 246, 0.2);
+    box-shadow: 0 4px 20px rgba(59, 130, 246, 0.12);
+}
+
+nav h1 {
+    color: #3b82f6;
+    text-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
+}
+
+:root[data-theme="light"] nav h1 {
+    text-shadow: none;
+}
+
+nav a {
+    color: var(--text-primary);
+    transition: all 0.3s ease;
+}
+
+nav a:hover {
+    color: #3b82f6;
+    text-shadow: 0 0 8px rgba(59, 130, 246, 0.4);
+}
+
+:root[data-theme="light"] nav a:hover {
+    text-shadow: none;
+}
+
+/* 4. BUTTONS & INPUTS */
+input, textarea {
+    background: var(--glass-bg) !important;
+    border: 1.5px solid var(--border-color) !important;
+    color: var(--text-primary) !important;
+    transition: all 0.3s ease;
+}
+
+:root[data-theme="light"] input,
+:root[data-theme="light"] textarea {
+    background: rgba(255, 255, 255, 0.6) !important;
+}
+
+input:focus, textarea:focus {
+    border-color: #3b82f6 !important;
+    background: var(--glass-bg) !important;
+    box-shadow: 0 0 15px rgba(59, 130, 246, 0.2) !important;
+}
+
+:root[data-theme="light"] input:focus,
+:root[data-theme="light"] textarea:focus {
+    background: rgba(255, 255, 255, 0.9) !important;
+    box-shadow: 0 0 15px rgba(59, 130, 246, 0.3) !important;
+}
+
+input::placeholder, textarea::placeholder {
+    color: var(--text-tertiary) !important;
+}
+
+button {
+    color: var(--text-primary);
+    transition: all 0.3s ease;
+}
+
+/* 5. SWIPER BANNER */
+.swiper { 
+    width: 100%; 
+    border-radius: 2rem; 
+    border: 2px solid rgba(59, 130, 246, 0.3);
+    box-shadow: 0 0 50px rgba(59, 130, 246, 0.15);
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+:root[data-theme="light"] .swiper {
+    border: 2px solid rgba(59, 130, 246, 0.4);
+    box-shadow: 0 0 40px rgba(59, 130, 246, 0.2);
+}
+
+/* 6. JUDUL "PILIH GAME" */
+.vibe-title {
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: 900;
+    color: var(--text-primary);
+    text-shadow: 0 0 15px rgba(255,255,255,0.3), 0 0 30px rgba(59, 130, 246, 0.3);
+    border-left: 5px solid #3b82f6;
+    padding-left: 15px;
+    transition: all 0.3s ease;
+}
+
+:root[data-theme="light"] .vibe-title {
+    text-shadow: none;
+    color: #0f172a;
+}
+
+/* 7. GAME CARD - PENTING! */
+.game-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border: 1.5px solid var(--border-color);
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+:root[data-theme="light"] .game-card {
+    background: rgba(255, 255, 255, 0.7);
+    border: 1.5px solid rgba(59, 130, 246, 0.25);
+    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.1);
+}
+
+.game-card:hover {
+    transform: translateY(-10px) scale(1.02);
+    border-color: rgba(59, 130, 246, 0.6);
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(255,255,255,0.05) 100%);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 40px rgba(59, 130, 246, 0.25);
+}
+
+:root[data-theme="light"] .game-card:hover {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(255,255,255,0.8) 100%);
+    border-color: rgba(59, 130, 246, 0.5);
+    box-shadow: 0 20px 60px rgba(59, 130, 246, 0.2);
+}
+
+.game-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 12px;
+    border: none !important;
+    transition: transform 0.3s ease;
+}
+
+.game-card:hover img {
+    transform: scale(1.05);
+}
+
+/* NAMA GAME DI BAWAH - PENTING! */
+.game-card p {
+    color: var(--text-primary) !important;
+    font-weight: 700 !important;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3) !important;
+    transition: all 0.3s ease;
+}
+
+:root[data-theme="light"] .game-card p {
+    color: #0f172a !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1) !important;
+}
+
+.game-card:hover p {
+    color: #3b82f6 !important;
+}
+
+:root[data-theme="light"] .game-card:hover p {
+    color: #2563eb !important;
+}
+
+/* 8. TOAST NOTIFICATION */
+.toast-notif {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: rgba(239, 68, 68, 0.95);
+    backdrop-filter: blur(15px);
+    color: white;
+    padding: 15px 30px;
+    border-radius: 20px;
+    font-weight: 900;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    z-index: 9999;
+    transition: all 0.6s cubic-bezier(0.19, 1, 0.22, 1);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 15px 50px rgba(239, 68, 68, 0.5);
+}
+
+.toast-show {
+    transform: translateX(-50%) translateY(0);
+}
+
+/* 9. NAV BUTTONS */
+.nav-chat-btn {
+    background: rgba(34, 197, 94, 0.1);
+    color: #22c55e !important;
+    border: 1px solid rgba(34, 197, 94, 0.3);
+    padding: 8px 16px;
+    border-radius: 99px;
+    transition: all 0.3s ease;
+}
+
+.nav-chat-btn:hover {
+    background: rgba(34, 197, 94, 0.2);
+    box-shadow: 0 0 20px rgba(34, 197, 94, 0.3);
+    border-color: rgba(34, 197, 94, 0.5);
+}
+
+/* 10. PROFILE & THEME BUTTON */
+#profile-btn {
+    background: rgba(30, 41, 59, 0.9) !important;
+    backdrop-filter: blur(15px);
+    border: 2px solid rgba(59, 130, 246, 0.6) !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    padding: 4px 10px 4px 4px !important;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+}
+
+:root[data-theme="light"] #profile-btn {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(226, 232, 240, 0.85)) !important;
+    border: 2px solid rgba(59, 130, 246, 0.5) !important;
+    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.15);
+}
+
+#profile-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 25px rgba(59, 130, 246, 0.3) !important;
+}
+
+#theme-toggle {
+    background: var(--glass-bg);
+    border: 1.5px solid var(--border-color);
+    padding: 8px 8px;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+:root[data-theme="light"] #theme-toggle {
+    background: rgba(255, 255, 255, 0.6);
+    border: 1.5px solid rgba(59, 130, 246, 0.3);
+}
+
+#theme-toggle:hover {
+    background: var(--hover-bg);
+    border-color: #3b82f6;
+    transform: rotate(20deg);
+}
+
+/* 11. PROFILE MENU */
+#profile-menu {
+    background: linear-gradient(135deg, var(--bg-secondary) 0%, rgba(26, 31, 41, 0.95) 100%) !important;
+    border: 1.5px solid rgba(59, 130, 246, 0.2) !important;
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(20px);
+    transition: all 0.3s ease;
+}
+
+:root[data-theme="light"] #profile-menu {
+    background: linear-gradient(135deg, rgba(248, 250, 252, 0.95), rgba(226, 232, 240, 0.9)) !important;
+    border: 1.5px solid rgba(59, 130, 246, 0.25) !important;
+    box-shadow: 0 15px 50px rgba(59, 130, 246, 0.15);
+}
+
+#profile-menu .p-4 {
+    background: rgba(59, 130, 246, 0.08);
+    border-bottom: 1px solid var(--border-color);
+}
+
+:root[data-theme="light"] #profile-menu .p-4 {
+    background: rgba(59, 130, 246, 0.1);
+    border-bottom: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+#profile-menu p {
+    color: var(--text-primary);
+}
+
+#profile-menu .text-blue-400 {
+    color: #3b82f6;
+}
+
+#profile-menu .text-gray-400 {
+    color: var(--text-secondary);
+}
+
+#profile-menu label,
+#profile-menu a {
+    color: var(--text-primary);
+    transition: all 0.3s ease;
+}
+
+#profile-menu label:hover,
+#profile-menu a:hover {
+    background: var(--hover-bg);
+    transform: translateX(4px);
+}
+
+/* 12. SPIN WHEEL */
+#spin-wheel {
+    border: 5px solid #3b82f6;
+    box-shadow: 0 0 30px rgba(59, 130, 246, 0.6);
+    transition: transform 4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+#spin-wheel:hover {
+    box-shadow: 0 0 45px rgba(59, 130, 246, 0.8);
+}
+
+#spin-btn {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    border: 3px solid #1e40af;
+    color: white;
+    transition: all 0.3s ease;
+    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.5);
+}
+
+#spin-btn:hover:not(:disabled) {
+    transform: scale(1.15);
+    box-shadow: 0 8px 30px rgba(59, 130, 246, 0.7);
+}
+
+#spin-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+#spin-result {
+    background: rgba(59, 130, 246, 0.15);
+    border: 2px solid rgba(59, 130, 246, 0.4);
+    color: var(--text-primary);
+}
+
+:root[data-theme="light"] #spin-result {
+    background: rgba(59, 130, 246, 0.12);
+    border: 2px solid rgba(59, 130, 246, 0.3);
+}
+
+/* 13. FOOTER */
+footer {
+    border-top: 1px solid var(--border-color);
+    color: var(--text-secondary);
+}
+
+footer a {
+    color: var(--text-primary);
+    transition: all 0.3s ease;
+}
+
+footer a:hover {
+    color: #3b82f6;
+}
+
+/* 14. DETAIL VIEW */
+#detail-view {
+    color: var(--text-primary);
+}
+
+#detail-view h2, #detail-view h3, #detail-view h4 {
+    color: var(--text-primary);
+}
+
+#detail-view .text-gray-400 {
+    color: var(--text-secondary);
+}
+
+#detail-view .bg-white\/5 {
+    background: var(--glass-bg);
+    border: 1.5px solid var(--border-color);
+}
+
+:root[data-theme="light"] #detail-view .bg-white\/5 {
+    background: rgba(255, 255, 255, 0.5);
+    border: 1.5px solid rgba(59, 130, 246, 0.25);
+}
+
+/* 15. POINTS & BADGES */
+.points-badge {
+    background: rgba(59, 130, 246, 0.12);
+    border: 1.5px solid rgba(59, 130, 246, 0.3);
+    color: #3b82f6;
+    transition: all 0.3s ease;
+}
+
+.points-badge:hover {
+    background: rgba(59, 130, 246, 0.2);
+    border-color: rgba(59, 130, 246, 0.5);
+}
+
+/* 16. RIWAYAT SECTION */
+#riwayat-section {
+    color: var(--text-primary);
+}
+
+#riwayat-list .glass {
+    background: var(--glass-bg);
+    border: 1.5px solid var(--border-color);
+}
+
+:root[data-theme="light"] #riwayat-list .glass {
+    background: rgba(255, 255, 255, 0.6);
+    border: 1.5px solid rgba(59, 130, 246, 0.25);
+}
+
+/* 17. TESTIMONI */
+#testi-section {
+    color: var(--text-primary);
+}
+
+#testi-container .glass {
+    background: var(--glass-bg);
+    border: 1.5px solid var(--border-color);
+}
+
+:root[data-theme="light"] #testi-container .glass {
+    background: rgba(255, 255, 255, 0.6);
+    border: 1.5px solid rgba(59, 130, 246, 0.25);
+}
+
+#testi-container p {
+    color: var(--text-secondary);
+}
+
+#testi-container .text-blue-500 {
+    color: #3b82f6;
+}
+
+/* 18. MODAL */
+#modal-maintenance {
+    background: rgba(0, 0, 0, 0.7);
+}
+
+:root[data-theme="light"] #modal-maintenance {
+    background: rgba(0, 0, 0, 0.4);
+}
+
+#modal-maintenance .glass {
+    background: var(--bg-secondary);
+    border: 1.5px solid var(--border-color);
+    color: var(--text-primary);
+}
+
+:root[data-theme="light"] #modal-maintenance .glass {
+    background: rgba(248, 250, 252, 0.95);
+    border: 1.5px solid rgba(59, 130, 246, 0.25);
+}
+
+/* 19. CUSTOM TOAST */
+#custom-toast {
+    background: linear-gradient(135deg, var(--bg-secondary), rgba(26, 31, 41, 0.9));
+    border: 1.5px solid rgba(59, 130, 246, 0.3);
+    color: var(--text-primary);
+    box-shadow: 0 10px 40px rgba(59, 130, 246, 0.2);
+}
+
+:root[data-theme="light"] #custom-toast {
+    background: linear-gradient(135deg, rgba(248, 250, 252, 0.95), rgba(226, 232, 240, 0.9));
+}
+
+/* 20. ANIMATION */
+@keyframes fadeIn { 
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes bounce-subtle {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+}
+
+.fade-in { animation: fadeIn 0.6s ease-in; }
+.animate-bounce-subtle { animation: bounce-subtle 2s infinite ease-in-out; }
+
+/* 21. RESPONSIVE */
+@media (max-width: 768px) {
+    #profile-btn {
+        padding: 4px 8px 4px 4px !important;
+    }
+    
+    nav .container {
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+    }
+    
+    @media (max-width: 640px) {
+        #profile-btn span { display: none; }
+        h1 { font-size: 14px !important; }
+    }
+}
+
+/* 22. PRINT STYLE */
+@media print {
+    body {
+        background: white !important;
+        color: black !important;
+    }
+}
+
+/* === FIX DIAMOND NUMBER VISIBILITY === */
+/* Diamond item name & number */
+#nominal-list p {
+    color: var(--text-primary) !important;
+    font-weight: 800 !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+}
+
+:root[data-theme="light"] #nominal-list p {
+    color: #0f172a !important;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Diamond harga besar */
+#nominal-list .text-blue-400,
+#nominal-list .text-blue-500 {
+    color: #3b82f6 !important;
+    font-weight: 900 !important;
+    text-shadow: 0 1px 3px rgba(59, 130, 246, 0.3) !important;
+}
+
+:root[data-theme="light"] #nominal-list .text-blue-400,
+:root[data-theme="light"] #nominal-list .text-blue-500 {
+    color: #2563eb !important;
+    text-shadow: none !important;
+}
+
+/* Nominal list container styling */
+#nominal-list > div {
+    background: var(--glass-bg) !important;
+    border: 1.5px solid var(--border-color) !important;
+    transition: all 0.3s ease;
+}
+
+:root[data-theme="light"] #nominal-list > div {
+    background: rgba(255, 255, 255, 0.5) !important;
+    border: 1.5px solid rgba(59, 130, 246, 0.25) !important;
+}
+
+#nominal-list > div:hover {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(255,255,255,0.05) 100%) !important;
+    border-color: rgba(59, 130, 246, 0.6) !important;
+    box-shadow: 0 8px 25px rgba(59, 130, 246, 0.2) !important;
+}
+
+:root[data-theme="light"] #nominal-list > div:hover {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.12) 0%, rgba(255,255,255,0.9) 100%) !important;
+}
+
+/* === FIX PAYMENT SECTION === */
+.payment-card {
+    background: var(--glass-bg) !important;
+    border: 1.5px solid var(--border-color) !important;
+    color: var(--text-primary) !important;
+    transition: all 0.3s ease;
+}
+
+:root[data-theme="light"] .payment-card {
+    background: rgba(255, 255, 255, 0.5) !important;
+    border: 1.5px solid rgba(59, 130, 246, 0.25) !important;
+}
+
+.payment-card:hover {
+    background: var(--hover-bg) !important;
+    border-color: rgba(59, 130, 246, 0.4) !important;
+}
+
+:root[data-theme="light"] .payment-card:hover {
+    background: rgba(255, 255, 255, 0.8) !important;
+    border-color: rgba(59, 130, 246, 0.4) !important;
+}
+
+.payment-card.active-card {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(255,255,255,0.05) 100%) !important;
+    border-color: #3b82f6 !important;
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.3) !important;
+}
+
+:root[data-theme="light"] .payment-card.active-card {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(255,255,255,0.9) 100%) !important;
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.25) !important;
+}
+
+/* Payment card image */
+.payment-card img {
+    filter: brightness(1) contrast(1);
+    transition: all 0.3s ease;
+}
+
+:root[data-theme="light"] .payment-card img {
+    filter: brightness(1.1) contrast(1.1);
+}
+
+.payment-card:hover img {
+    filter: brightness(1.2) contrast(1.1);
+}
+
+/* Payment card text "PILIH" */
+.payment-card .text-gray-500 {
+    color: var(--text-secondary) !important;
+    transition: all 0.3s ease;
+}
+
+:root[data-theme="light"] .payment-card .text-gray-500 {
+    color: #64748b !important;
+}
+
+.payment-card:hover .text-gray-500,
+.payment-card.active-card .text-gray-500 {
+    color: #3b82f6 !important;
+}
+
+/* === FIX DETAIL VIEW SECTIONS === */
+#detail-view .glass {
+    background: var(--glass-bg) !important;
+    border: 1.5px solid var(--border-color) !important;
+}
+
+:root[data-theme="light"] #detail-view .glass {
+    background: rgba(255, 255, 255, 0.5) !important;
+    border: 1.5px solid rgba(59, 130, 246, 0.25) !important;
+    box-shadow: 0 8px 32px rgba(59, 130, 246, 0.12) !important;
+}
+
+/* Section titles */
+#detail-view h4 {
+    color: var(--text-primary) !important;
+    font-weight: 900 !important;
+}
+
+:root[data-theme="light"] #detail-view h4 {
+    color: #0f172a !important;
+}
+
+/* Input fields di detail view */
+#detail-view input {
+    background: var(--glass-bg) !important;
+    border: 1.5px solid var(--border-color) !important;
+    color: var(--text-primary) !important;
+}
+
+:root[data-theme="light"] #detail-view input {
+    background: rgba(255, 255, 255, 0.6) !important;
+    border: 1.5px solid rgba(59, 130, 246, 0.3) !important;
+}
+
+#detail-view input:focus {
+    border-color: #3b82f6 !important;
+    background: var(--glass-bg) !important;
+}
+
+:root[data-theme="light"] #detail-view input:focus {
+    background: rgba(255, 255, 255, 0.9) !important;
+}
+
+/* Bagian total pembayaran */
+#display-total {
+    color: #3b82f6 !important;
+    font-weight: 900 !important;
+    font-size: 1.875rem !important;
+    transition: all 0.3s ease;
+}
+
+:root[data-theme="light"] #display-total {
+    color: #2563eb !important;
+}
+
+/* === FIX DETAIL VIEW BADGE & TEXT === */
+#detail-view .text-\[10px\] {
+    color: var(--text-secondary) !important;
+}
+
+:root[data-theme="light"] #detail-view .text\[10px\] {
+    color: #64748b !important;
+}
+
+:root[data-theme="light"] #display-total {
+    color: #2563eb !important;
+}
+
+#detail-view .text-gray-300 {
+    color: var(--text-secondary) !important;
+}
+
+:root[data-theme="light"] #detail-view .text-gray-300 {
+    color: #64748b !important;
+}
+
+#detail-view .text-blue-400 {
+    color: #3b82f6 !important;
+}
+
+#detail-view .text-green-400 {
+    color: #22c55e !important;
+}
+
+/* === STEP NUMBER STYLING === */
+#detail-view .bg-blue-600 {
+    background: #3b82f6 !important;
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.4) !important;
+}
+
+:root[data-theme="light"] #detail-view .bg-blue-600 {
+    background: #2563eb !important;
+    box-shadow: 0 0 15px rgba(59, 130, 246, 0.3) !important;
+}
+
+/* === BOX USERNAME STYLING === */
+#box-username {
+    background: rgba(59, 130, 246, 0.1) !important;
+    border: 2px solid rgba(59, 130, 246, 0.3) !important;
+    color: var(--text-primary) !important;
+}
+
+:root[data-theme="light"] #box-username {
+    background: rgba(59, 130, 246, 0.08) !important;
+    border: 2px solid rgba(59, 130, 246, 0.25) !important;
+}
+
+#box-username .text-green-500 {
+    color: #22c55e !important;
+}
+
+#hasil-username {
+    color: var(--text-primary) !important;
+    font-weight: 900 !important;
+}
+
+:root[data-theme="light"] #hasil-username {
+    color: #0f172a !important;
+}
 </style>
 </head>
 <body class="pb-20">
@@ -194,31 +990,68 @@ nav .container {
                 <a href="status.html" class="hover:text-blue-400 transition">Cek Status</a>
             </div>
 
+<button id="theme-toggle" onclick="toggleTheme()" class="p-2 rounded-full hover:bg-white/10 transition-all" title="Toggle Theme">
+    <i class="fas fa-sun text-yellow-400"></i>
+</button>
+
             <div class="relative">
                 <button id="profile-btn" class="flex items-center rounded-full transition-all active:scale-95">
                    <img id="user-pfp" src="https://ui-avatars.com/api/?name=Cakra&background=3b82f6&color=fff" 
                      class="w-9 h-9 rounded-full object-cover">
                     <i class="fas fa-chevron-down text-[10px] ml-2 text-blue-400"></i>
                 </button>
-                <div id="profile-menu" class="hidden absolute right-0 mt-3 w-56 glass rounded-2xl border-white/10 shadow-2xl overflow-hidden z-[110]">
-                    <div class="p-4 border-b border-white/5 bg-blue-500/5">
-                        <p class="text-[10px] text-blue-400 uppercase font-black tracking-widest">Akun Saya</p>
-                        <p class="text-sm font-bold truncate text-white">Cakra Member</p>
-                    </div>
-    
-                    <div class="p-2">
-                       <label for="upload-pfp" class="flex items-center gap-3 p-3 rounded-xl hover:bg-white/10 cursor-pointer transition-all w-full">
-                            <i class="fas fa-camera text-blue-500"></i>
-                            <span class="text-xs font-bold text-white">Ganti Foto Profil</span>
-                            <input type="file" id="upload-pfp" class="hidden" accept="image/*" onchange="gantiPFP(this)">
-                        </label>
+<div id="profile-menu" class="hidden absolute right-0 mt-3 w-56 glass rounded-2xl border-white/10 shadow-2xl overflow-hidden z-[110]">
+    <div class="p-4 border-b border-white/5 bg-blue-500/5">
+        <p class="text-[10px] text-blue-400 uppercase font-black tracking-widest">Akun Saya</p>
+        <p class="text-sm font-bold truncate text-white">Cakra Member</p>
+        
+        <!-- POINTS DISPLAY (BARU) ✨ -->
+        <div class="mt-3 flex justify-between items-center text-xs">
+            <span class="text-gray-400">Poin: <span id="user-points" class="text-yellow-400 font-black">0</span></span>
+            <span class="text-gray-400">Spin: <span id="spin-count" class="text-blue-400 font-black">0</span></span>
+        </div>
+    </div>
 
-                        <a href="https://wa.me/6283188121461" class="flex items-center gap-3 p-3 rounded-xl hover:bg-white/5 text-green-500">
-                            <i class="fab fa-whatsapp"></i>
-                            <span class="text-xs font-bold">Chat Admin</span>
-                       </a>
-                    </div>
-                </div>
+    <!-- SPIN WHEEL (BARU) ✨ -->
+    <div class="p-4 border-b border-white/5">
+        <p class="text-[10px] text-blue-400 uppercase font-black tracking-widest text-center mb-3">🎡 Lucky Spin</p>
+        
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 1rem;">
+            <!-- SPIN WHEEL CIRCLE -->
+            <div style="position: relative; width: 160px; height: 160px;">
+                <div id="spin-wheel" style="width: 160px; height: 160px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; border: 5px solid #3b82f6; background: conic-gradient(from 0deg, #ff6b6b 0deg 45deg, #4ecdc4 45deg 90deg, #45b7d1 90deg 135deg, #f9ca24 135deg 180deg, #6c5ce7 180deg 225deg, #a29bfe 225deg 270deg, #fdcb6e 270deg 315deg, #e17055 315deg 360deg); box-shadow: 0 0 20px rgba(59, 130, 246, 0.5); transition: transform 4s cubic-bezier(0.25, 0.46, 0.45, 0.94);"></div>
+                
+                <!-- SPIN POINTER (JARUM) -->
+                <div id="spin-pointer" style="position: absolute; top: -10px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 8px solid transparent; border-right: 8px solid transparent; border-top: 15px solid #3b82f6; z-index: 20; filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.3));"></div>
+            </div>
+            
+            <!-- SPIN BUTTON (TOMBOL) -->
+            <button id="spin-btn" onclick="spinWheel()" style="background: linear-gradient(135deg, #3b82f6, #2563eb); padding: 0.5rem 1rem; border-radius: 50%; width: 70px; height: 70px; font-weight: black; cursor: pointer; border: 2px solid #1e40af; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.25rem; font-size: 10px; color: white; transition: all 0.3s; text-align: center;">
+                <i class="fas fa-ticket-alt text-sm"></i>
+                SPIN
+            </button>
+        </div>
+        
+        <!-- HASIL SPIN -->
+        <div id="spin-result" class="hidden text-center mt-3 p-2 bg-blue-500/10 rounded-lg text-xs" style="min-height: 50px; display: flex; align-items: center; justify-content: center;">
+            <p class="text-gray-400">Menunggu hasil...</p>
+        </div>
+    </div>
+
+    <!-- GANTI FOTO & CHAT (DIPINDAH KE BAWAH) -->
+    <div class="p-2">
+        <label for="upload-pfp" class="flex items-center gap-3 p-3 rounded-xl hover:bg-white/10 cursor-pointer transition-all w-full">
+            <i class="fas fa-camera text-blue-500"></i>
+            <span class="text-xs font-bold text-white">Ganti Foto Profil</span>
+            <input type="file" id="upload-pfp" class="hidden" accept="image/*" onchange="gantiPFP(this)">
+        </label>
+
+        <a href="https://wa.me/6283188121461" class="flex items-center gap-3 p-3 rounded-xl hover:bg-white/5 text-green-500">
+            <i class="fab fa-whatsapp"></i>
+            <span class="text-xs font-bold">Chat Admin</span>
+        </a>
+    </div>
+</div>
             </div>
         </div>
     </div>
@@ -291,6 +1124,7 @@ nav .container {
                 <a href="#" class="hover:text-blue-400 transition"><i class="fab fa-twitter"></i></a>
                 <a href="#" class="hover:text-blue-600 transition"><i class="fab fa-facebook"></i></a>
                 <a href="https://wa.me/6283188121461" class="hover:text-green-500 transition"><i class="fab fa-whatsapp"></i></a>
+                <a href="admin-login.html" class="text-blue-400 hover:text-blue-300 text-xs">Admin Panel</a>
             </div>
             <p class="text-gray-500 text-sm">&copy; 2026 Cakra Store. All Rights Reserved.</p>
         </footer>
@@ -315,8 +1149,8 @@ nav .container {
             <div class="lg:col-span-8 space-y-6">
                 
                 <div class="glass p-8 w-full border-white/5">
-    <h4 class="font-black mb-6 italic text-xl flex items-center">
-        <span class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center mr-3 text-sm not-italic shadow-lg shadow-blue-500/50">1</span>
+<h4 class="font-black mb-6 italic text-xl flex items-center" style="color: var(--text-primary);">
+    <span class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center mr-3 text-sm not-italic shadow-lg shadow-blue-500/50">2</span>
         Masukkan Data Akun
     </h4>
     <div class="grid grid-cols-2 gap-4">
@@ -399,7 +1233,6 @@ nav .container {
 </section>
 
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-    <script src="script.js"></script>
 
 <div id="modal-maintenance" class="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm hidden px-4">
     <div class="glass max-w-sm w-full p-8 border-blue-500/30 text-center animate-in zoom-in duration-300">
@@ -418,6 +1251,7 @@ nav .container {
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
+    <script src="script.js"></script>
 
 
     <div id="custom-toast" class="fixed top-24 left-1/2 -translate-x-1/2 z-[200] hidden">

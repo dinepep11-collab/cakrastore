@@ -1,3 +1,141 @@
+// === 0. TEMA LIGHT/DARK MODE ===
+function initTheme() {
+    const savedTheme = localStorage.getItem('cakra_theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    updateThemeBtn();
+}
+
+function toggleTheme() {
+    const currentTheme = document.documentElement.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('cakra_theme', newTheme);
+    updateThemeBtn();
+}
+
+function updateThemeBtn() {
+    const btn = document.getElementById('theme-toggle');
+    if (!btn) return;
+    
+    const theme = document.documentElement.getAttribute('data-theme');
+    const icon = btn.querySelector('i');
+    
+    if (icon) {
+        if (theme === 'dark') {
+            icon.className = 'fas fa-sun text-yellow-400';
+            btn.title = 'Ubah ke Light Mode';
+        } else {
+            icon.className = 'fas fa-moon text-blue-500';
+            btn.title = 'Ubah ke Dark Mode';
+        }
+    }
+}
+
+// === SISTEM POIN & SPIN ===
+let userPoints = parseInt(localStorage.getItem('cakra_points')) || 0;
+let spinCount = parseInt(localStorage.getItem('cakra_spins')) || 0;
+
+// Fungsi hitung poin berdasarkan nominal
+function hitungPoin(nominal) {
+    if (nominal < 10000) return 5;      // < 10k = 5 poin
+    if (nominal < 50000) return 15;     // 10k-50k = 15 poin
+    if (nominal < 100000) return 35;    // 50k-100k = 35 poin
+    if (nominal < 500000) return 75;    // 100k-500k = 75 poin
+    return 150;                         // >= 500k = 150 poin
+}
+
+// Fungsi tambah poin (dipanggil saat transaksi selesai)
+function tambahPoin(nominal) {
+    const poinDapat = hitungPoin(nominal);
+    userPoints += poinDapat;
+    
+    // Spin gratis setiap 100 poin
+    const spinBaru = Math.floor(userPoints / 100);
+    if (spinBaru > spinCount) {
+        spinCount = spinBaru;
+        showToast(`🎁 Dapatkan ${spinBaru - (spinCount - 1)} Spin Gratis!`);
+    }
+    
+    localStorage.setItem('cakra_points', userPoints);
+    localStorage.setItem('cakra_spins', spinCount);
+    updatePointsDisplay();
+}
+
+function updatePointsDisplay() {
+    document.querySelectorAll('#user-points').forEach(el => {
+        el.innerText = userPoints;
+    });
+    document.querySelectorAll('#spin-count').forEach(el => {
+        el.innerText = spinCount;
+    });
+}
+
+// Reward untuk spin wheel
+const spinRewards = [
+    { label: 'Diskon 5%', icon: '🎟️', type: 'discount', value: 5 },
+    { label: 'Diskon 10%', icon: '🎫', type: 'discount', value: 10 },
+    { label: '+ 50 Poin', icon: '⭐', type: 'points', value: 50 },
+    { label: '+ 100 Poin', icon: '✨', type: 'points', value: 100 },
+    { label: 'Free Item', icon: '🎁', type: 'freeitem', value: 1 },
+    { label: 'Diskon 15%', icon: '🔥', type: 'discount', value: 15 },
+    { label: '+ 25 Poin', icon: '💫', type: 'points', value: 25 },
+    { label: 'Cashback Rp 5k', icon: '💰', type: 'cashback', value: 5000 },
+];
+
+let isSpinning = false;
+
+function spinWheel() {
+    if (spinCount <= 0) {
+        return showToast('Spin tidak cukup! Kumpulkan 100 poin untuk 1 spin');
+    }
+    if (isSpinning) return;
+    
+    isSpinning = true;
+    spinCount--;
+    localStorage.setItem('cakra_spins', spinCount);
+    updatePointsDisplay();
+    
+    const wheel = document.getElementById('spin-wheel');
+    const spinner = document.getElementById('spin-pointer');
+    const resultBox = document.getElementById('spin-result');
+    
+    // Random rotation (minimal 5 putaran + random)
+    const randomDegree = Math.random() * 360;
+    const totalRotation = (5 * 360) + randomDegree;
+    
+    wheel.style.transition = 'transform 4s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+    wheel.style.transform = `rotate(${totalRotation}deg)`;
+    
+    setTimeout(() => {
+        isSpinning = false;
+        const winIndex = Math.floor((randomDegree / 360) * spinRewards.length);
+        const reward = spinRewards[winIndex];
+        
+        showSpinResult(reward);
+        
+        // Bonus poin
+        if (reward.type === 'points') {
+            userPoints += reward.value;
+            localStorage.setItem('cakra_points', userPoints);
+            updatePointsDisplay();
+        }
+    }, 4000);
+}
+
+function showSpinResult(reward) {
+    const resultBox = document.getElementById('spin-result');
+    resultBox.innerHTML = `
+        <div class="text-center animate-bounce">
+            <p class="text-4xl mb-2">${reward.icon}</p>
+            <p class="text-lg font-black text-blue-400 uppercase">${reward.label}</p>
+            <p class="text-xs text-gray-400 mt-2">Reward telah masuk ke akun kamu!</p>
+        </div>
+    `;
+    resultBox.classList.remove('hidden');
+    
+    setTimeout(() => resultBox.classList.add('hidden'), 3000);
+}
+
 // === 1. DATABASE GAME LENGKAP ===
 const dataGame = {
     "Mobile Legends": {
@@ -298,7 +436,6 @@ function renderNominal(game) {
 
 function buatElementNominal(v) {
     const div = document.createElement('div');
-    // Desain Box: Efek Glassmorphism dengan border glow saat dihover
     div.className = "relative glass p-4 rounded-2xl cursor-pointer border-2 border-white/5 hover:border-blue-500/50 hover:bg-blue-500/5 transition-all duration-300 text-left flex flex-col justify-between min-h-[90px] overflow-hidden group";
     
     const hargaFormat = "Rp " + Number(v.harga).toLocaleString('id-ID');
@@ -310,12 +447,12 @@ function buatElementNominal(v) {
         </div>
 
         <div class="relative z-10">
-            <p class="text-[11px] font-black text-white/90 mb-1 leading-tight group-hover:text-blue-400 transition-colors">${v.item}</p>
+            <p class="text-[12px] font-black text-white/95 mb-1 leading-tight group-hover:text-blue-400 transition-colors" style="text-shadow: 0 1px 2px rgba(0,0,0,0.3);">${v.item}</p>
             ${hargaCoret}
         </div>
         
         <div class="relative z-10 mt-2">
-            <p class="text-[13px] text-blue-400 font-extrabold tracking-wide">${hargaFormat}</p>
+            <p class="text-[14px] text-blue-400 font-extrabold tracking-wide" style="text-shadow: 0 1px 2px rgba(59, 130, 246, 0.4);">${hargaFormat}</p>
         </div>
 
         <div class="check-indicator absolute top-2 right-2 hidden">
@@ -326,7 +463,6 @@ function buatElementNominal(v) {
     div.onclick = () => {
         pilihNominal(v.item, v.item, v.harga, div);
         
-        // Munculkan indikator ceklis
         document.querySelectorAll('.check-indicator').forEach(el => el.classList.add('hidden'));
         div.querySelector('.check-indicator').classList.remove('hidden');
     };
@@ -437,8 +573,10 @@ function showToast(pesan) {
     }, 3000);
 }
 
-// === START ===
+// === INISIALISASI UTAMA ===
 document.addEventListener('DOMContentLoaded', () => {
+    initTheme();
+    updatePointsDisplay();
     initFirebase();
     tampilkanRiwayat();
     muatTesti();
@@ -448,20 +586,50 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // CEK: Kalau ada parameter game (diklik dari katalog)
     if (gameParam && dataGame[gameParam]) {
-        // Langsung sembunyikan home-view SEBELUM render yang lain
-        document.getElementById('home-view').classList.add('hidden');
-        
-        // Baru jalankan fungsi buka detail
+        const homeView = document.getElementById('home-view');
+        if(homeView) homeView.classList.add('hidden');
         bukaDetail(gameParam, dataGame[gameParam].img);
     } else {
-        // Kalau nggak ada parameter (akses home biasa), baru render game list
-        if (document.getElementById('game-list')) {
-            renderGameCakra(); 
-        }
+        // Render game list di home
+        renderGameCakra(); 
     }
 
+    // INISIALISASI SWIPER
     if(document.querySelector(".mySwiper")) {
-        new Swiper(".mySwiper", { loop: true, autoplay: { delay: 3000 } });
+        new Swiper(".mySwiper", { 
+            loop: true, 
+            autoplay: { 
+                delay: 3000,
+                disableOnInteraction: false 
+            },
+            pagination: {
+                el: ".swiper-pagination",
+                clickable: true,
+            },
+        });
+    }
+});
+
+// Profile & Foto Init (Pisah dari DOMContentLoaded utama)
+window.addEventListener('DOMContentLoaded', () => {
+    // Buat saved PFP
+    const savedPFP = localStorage.getItem('cakra_pfp_data');
+    if (savedPFP) {
+        document.querySelectorAll('#user-pfp').forEach(img => img.src = savedPFP);
+    }
+
+    // Toggle Dropdown Menu
+    const profileBtn = document.getElementById('profile-btn');
+    const profileMenu = document.getElementById('profile-menu');
+    
+    if(profileBtn && profileMenu) {
+        document.addEventListener('click', (e) => {
+            if (profileBtn.contains(e.target)) {
+                profileMenu.classList.toggle('hidden');
+            } else if (!profileMenu.contains(e.target)) {
+                profileMenu.classList.add('hidden');
+            }
+        });
     }
 });
 
@@ -591,37 +759,3 @@ function tutupModal() {
     const modal = document.getElementById('modal-maintenance');
     if (modal) modal.classList.add('hidden');
 }
-
-// Inisialisasi saat halaman dibuka
-// Inisialisasi Utama saat halaman dibuka
-document.addEventListener('DOMContentLoaded', () => {
-    initFirebase();
-    tampilkanRiwayat();
-    muatTesti();
-
-    const urlParams = new URLSearchParams(window.location.search);
-    const gameParam = urlParams.get('game');
-
-    if (gameParam && dataGame[gameParam]) {
-        const homeView = document.getElementById('home-view');
-        if(homeView) homeView.classList.add('hidden');
-        bukaDetail(gameParam, dataGame[gameParam].img);
-    } else {
-        renderGameCakra(); 
-    }
-
-    // INISIALISASI SWIPER DI SINI BIAR AMAN
-    if(document.querySelector(".mySwiper")) {
-        new Swiper(".mySwiper", { 
-            loop: true, 
-            autoplay: { 
-                delay: 3000,
-                disableOnInteraction: false 
-            },
-            pagination: {
-                el: ".swiper-pagination",
-                clickable: true,
-            },
-        });
-    }
-});
